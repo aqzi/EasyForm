@@ -4,9 +4,12 @@ import React, { useState, useRef, useEffect } from 'react'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, sortableKeyboardCoordinates, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Plus, Save, Menu } from 'lucide-react'
+import { GripVertical, Plus, Save, Menu, List, BarChart2 } from 'lucide-react'
 import TextResponse from '@/components/formResponseActions/text'
 import YesOrNoResponse from '@/components/formResponseActions/yesOrNo'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import FormOptionsDropdown from '@/components/layout/dropdown';
 
 interface Question {
   id: string;
@@ -98,7 +101,8 @@ const CreateForm: React.FC = () => {
     { id: '1', question: '', responseType: 'text', response: '' },
   ])
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const router = useRouter()
+  const session = useSession()
 
   useEffect(() => {
     const resizeContainer = () => {
@@ -183,43 +187,21 @@ const CreateForm: React.FC = () => {
       console.error('Error saving form:', error);
       // You can add an error message for the user here
     }
-
-    setIsDropdownOpen(false);
   };
 
   return (
     <div className="flex items-center relative justify-center h-full bg-[#151515] p-4 border border-[#474b5f] shadow-lg overflow-hidden">
         <div className="absolute top-6 right-6">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="text-gray-400 hover:text-gray-200 transition-colors duration-200 p-2"
-            title="More options"
-          >
-            <Menu size={30} className='text-[#8f9bd4]'/>
-          </button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5">
-              <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                <button
-                  onClick={handleSave}
-                  className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
-                  role="menuitem"
-                >
-                  <Save size={16} className="mr-2" />
-                  Save
-                </button>
-                {/* Add more dropdown items here if needed */}
-              </div>
-            </div>
-          )}
+          <FormOptionsDropdown
+            options={['save', 'myForms', 'statistics']}
+            onSave={handleSave}
+          />
         </div>
       <div 
         ref={containerRef}
-        className="w-[595px] h-[842px] bg-[#151515] overflow-hidden origin-center relative"
+        className="w-[595px] h-[842px] bg-[#151515] overflow-hidden origin-center relative mt-16"
         style={{ transform: 'scale(1)' }}
       >
-        
-
         <div className="h-full p-8 overflow-auto">
           <div className="relative mb-8">
             <input

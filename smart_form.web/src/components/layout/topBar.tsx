@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Bell, User, ChevronDown, LogOut } from 'lucide-react';
+import { Bell, User, ChevronDown, LogOut, Settings } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react'
 
 const TopBar = () => {
@@ -16,7 +16,8 @@ const TopBar = () => {
   ];
 
   return (
-    <div className="bg-[#16161d] border-b border-[#8f9bd4] p-4 flex justify-end items-center">
+    <div className="bg-[#16161d] border-b border-[#8f9bd4] p-4 flex justify-between items-center">
+      <div className="text-2xl font-bold text-gray-300">EasyForm</div>
       <div className="flex items-center space-x-4">
         <div className="relative">
           <button
@@ -45,14 +46,14 @@ const TopBar = () => {
             <ChevronDown size={16} />
           </button>
           {showProfileDropdown && (
-            <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-700">
-              <div className="px-4 py-2 text-sm text-gray-300">
-                {session?.data?.user?.email}
-              </div>
-              <div className="px-4 py-2 text-sm text-gray-300">
-                ID: {session?.data?.user?.id}
-              </div>
-              <hr className="border-gray-700" />
+            <div className="absolute right-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-700">
+              <button
+                onClick={() => {/* Add settings logic here */}}
+                className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center"
+              >
+                <Settings size={16} className="mr-2" />
+                Settings
+              </button>
               <button
                 onClick={() => signOut()}
                 className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center"
