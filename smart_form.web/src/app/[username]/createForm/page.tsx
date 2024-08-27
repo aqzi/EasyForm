@@ -4,12 +4,14 @@ import React, { useState, useRef, useEffect } from 'react'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, sortableKeyboardCoordinates, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Plus, Save, Menu, List, BarChart2 } from 'lucide-react'
+import { GripVertical } from 'lucide-react'
 import TextResponse from '@/components/formResponseActions/text'
 import YesOrNoResponse from '@/components/formResponseActions/yesOrNo'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import FormOptionsDropdown from '@/components/layout/dropdown';
+import Plus from '@/components/customSvg/plus';
+import Save from '@/components/customSvg/save';
 
 interface Question {
   id: string;
@@ -150,10 +152,9 @@ const CreateForm: React.FC = () => {
     ))
   }
 
-  const handleAddQuestion = (id: string) => {
-    const index = questions.findIndex(q => q.id === id)
+  const handleAddQuestion = () => {
     const newQuestion: Question = { id: Date.now().toString(), question: '', responseType: 'text', response: '' }
-    setQuestions([...questions.slice(0, index + 1), newQuestion, ...questions.slice(index + 1)])
+    setQuestions([...questions, newQuestion])
   }
 
   const handleSave = async () => {
@@ -191,63 +192,76 @@ const CreateForm: React.FC = () => {
 
   return (
     <div className="flex items-center relative justify-center h-full bg-[#151515] p-4 border border-[#474b5f] shadow-lg overflow-hidden">
-        <div className="absolute top-6 right-6">
-          <FormOptionsDropdown
-            options={['save', 'myForms', 'statistics']}
-            onSave={handleSave}
-          />
-        </div>
-      <div 
+      <div className="absolute top-6 right-6">
+        <FormOptionsDropdown options={['myForms', 'statistics']}/>
+      </div>
+      <div
         ref={containerRef}
         className="w-[595px] h-[842px] bg-[#151515] overflow-hidden origin-center relative mt-16"
         style={{ transform: 'scale(1)' }}
       >
-        <div className="h-full p-8 overflow-auto">
-          <div className="relative mb-8">
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Untitled Form"
-              className="text-3xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 hover:bg-gray-800 transition-colors duration-200 ease-in-out px-2 py-1 rounded"
-            />
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
-          </div>
-          <DndContext 
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext 
-              items={questions.map(q => q.id)}
-              strategy={verticalListSortingStrategy}
+        <div className="h-full p-8 overflow-auto flex">
+          <div className="flex-grow">
+            <div className="relative mb-8">
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Untitled Form"
+                className="text-3xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 hover:bg-gray-800 transition-colors duration-200 ease-in-out px-2 py-1 rounded"
+              />
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
+            </div>
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              {questions.map((q, index) => (
-                <SortableItem 
-                  key={q.id} 
-                  id={q.id} 
-                  question={q.question}
-                  responseType={q.responseType}
-                  onChange={handleQuestionChange}
-                  onAddQuestion={handleAddQuestion}
-                  number={index + 1}
-                  response={q.response}
-                  onResponseChange={handleResponseChange}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-          <button 
-            onClick={() => handleAddQuestion(questions[questions.length - 1].id)}
-            className="mt-4 flex items-center text-gray-400 hover:text-gray-200 transition-colors duration-200"
-            title="Add a question"
-          >
-            <Plus size={20} className="mr-2" />
-            Add a question
-          </button>
+              <SortableContext 
+                items={questions.map(q => q.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {questions.map((q, index) => (
+                  <div id={`question-${q.id}`} key={q.id}>
+                    <SortableItem 
+                      id={q.id} 
+                      question={q.question}
+                      responseType={q.responseType}
+                      onChange={handleQuestionChange}
+                      onAddQuestion={handleAddQuestion}
+                      number={index + 1}
+                      response={q.response}
+                      onResponseChange={handleResponseChange}
+                    />
+                  </div>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
         </div>
-        
-        {/* Remove the previous save button if it exists */}
+      </div>
+      <div className="absolute bottom-8 right-8 flex space-x-4">
+        <button
+          onClick={handleSave}
+          className="group relative w-16 h-16 bg-transparent border-none focus:outline-none"
+          aria-label="Save form"
+        >
+          <Save/>
+          <span className="absolute inset-0 flex items-center justify-center text-transparent group-hover:text-white transition-all duration-300 ease-in-out">
+            Save
+          </span>
+        </button>
+
+        <button
+          onClick={handleAddQuestion}
+          className="group relative w-16 h-16 bg-transparent border-none focus:outline-none"
+          aria-label="Add new form"
+        >
+          <Plus/>
+          <span className="absolute inset-0 flex items-center justify-center text-transparent group-hover:text-white transition-all duration-300 ease-in-out">
+            New
+          </span>
+        </button>
       </div>
     </div>
   )

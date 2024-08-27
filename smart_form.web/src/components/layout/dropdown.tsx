@@ -3,20 +3,18 @@ import { Menu, Save, List, BarChart2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
-type DropdownOption = 'save' | 'myForms' | 'createForm' | 'statistics';
+type DropdownOption = 'myForms' | 'createForm' | 'statistics';
 
 interface FormOptionsDropdownProps {
     options: DropdownOption[];
-    onSave: () => void;
 }
 
-const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options, onSave }) => {
+const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const session = useSession();
 
     const buttonConfig = {
-        save: { icon: Save, text: 'Save', onClick: () => { onSave(); setIsOpen(false); } },
         myForms: { icon: List, text: 'My Forms', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`) },
         createForm: { icon: List, text: 'Create Form', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`) },
         statistics: { icon: BarChart2, text: 'Statistics', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/statistics`) },
@@ -29,7 +27,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options, onSa
                 className="text-gray-400 hover:text-gray-200 transition-colors duration-200 p-2"
                 title="More options"
             >
-                <Menu size={30} className='text-[#8f9bd4]'/>
+                <Menu size={60} strokeWidth={1} className='text-[#8f9bd4]'/>
             </button>
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5">

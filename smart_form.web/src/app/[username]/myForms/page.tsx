@@ -52,7 +52,7 @@ const UserForms: React.FC = () => {
   return (
     <div className="mx-auto h-full bg-[#151515] p-4 border border-[#474b5f] shadow-lg relative">
       <div className="absolute top-6 right-6">
-        <FormOptionsDropdown options={['createForm', 'statistics']} onSave={() => {}} />
+        <FormOptionsDropdown options={['createForm', 'statistics']} />
       </div>
       <div className='max-w-3xl mx-auto mt-8'> {/* Added mx-auto here */}
           <div className="relative mb-12">
