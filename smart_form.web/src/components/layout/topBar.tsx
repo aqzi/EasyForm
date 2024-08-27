@@ -49,6 +49,9 @@ const TopBar = () => {
               <div className="px-4 py-2 text-sm text-gray-300">
                 {session?.data?.user?.email}
               </div>
+              <div className="px-4 py-2 text-sm text-gray-300">
+                ID: {session?.data?.user?.id}
+              </div>
               <hr className="border-gray-700" />
               <button
                 onClick={() => signOut()}
