@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Save, List, BarChart2, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import useFormEditorStore from '@/store/formEditor';
 
 export type DropdownOption = 'myForms' | 'createForm' | 'statistics' | 'settings';
 
@@ -15,9 +16,16 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
     const router = useRouter();
     const session = useSession();
 
+    const { resetForm } = useFormEditorStore((state) => ({
+        resetForm: state.resetForm,
+    }));
+
     const buttonConfig = {
         myForms: { icon: List, text: 'My Forms', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`) },
-        createForm: { icon: List, text: 'Create Form', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`) },
+        createForm: { icon: List, text: 'Create Form', onClick: () => {
+            resetForm();
+            router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`)
+        } },
         statistics: { icon: BarChart2, text: 'Statistics', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/statistics`) },
         settings: { icon: Settings, text: 'Settings', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings`) },
     };

@@ -18,16 +18,9 @@ enum ParticipationRole {
   RESPONDER
 }
 
-// model User {
-//   id    String     @id @default(uuid())
-//   email String  @unique
-//   name  String
-//   formParticipations FormParticipation[]
-// }
-
 model Form {
   id    Int     @id @default(autoincrement())
-  name  String
+  title  String
   fields Field[]
   participations FormParticipation[]
 }
@@ -48,8 +41,10 @@ model FormParticipation {
 model Field {
   id    Int     @id @default(autoincrement())
   question  String
-  type  String
+  responseType  String @default("text")
   response String
+  placeholder String?
+  config Json?
   sequenceNumber Int @default(1)
   form  Form    @relation(fields: [formId], references: [id])
   formId  Int

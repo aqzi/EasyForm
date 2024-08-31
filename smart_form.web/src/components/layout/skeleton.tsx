@@ -14,7 +14,9 @@ const Skeleton: React.FC<SkeletonProps> = ({ options, children }) => {
                 <FormOptionsDropdown options={options}/>
             </div>
             <div className="absolute top-6 left-6">
-                <h1 className='text-[#e5e5e5] text-3xl font-bold'>EasyForm</h1>
+                <h1 className='bg-clip-text text-[#f6f6f6] text-4xl font-bold tracking-tight'>
+                    EasyForm
+                </h1>
             </div>
             <div className='h-full mt-20'>
                 {children}

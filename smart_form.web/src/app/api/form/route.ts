@@ -7,23 +7,47 @@ export async function GET(req: NextRequest) {
         const session = await auth()
         const userId = session?.user?.id
 
-        //get forms where the use is the creator of the forms
-        const forms = await prisma.formParticipation.findMany({
-            where: {
-                userId,
-                role: "CREATOR"
-            },
-            include: {
-                form: true
+        if (!userId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const formId = req.nextUrl.searchParams.get('id')
+
+        if (formId) {
+            const formIdInt = parseInt(formId || '0', 10);
+
+            // Get specific form
+            const form = await prisma.form.findUnique({
+                where: { id: formIdInt },
+                include: {
+                    fields: true
+                }
+            });
+
+            if (!form) {
+                return NextResponse.json({ error: 'Form not found' }, { status: 404 });
             }
-        })
 
-        const formSelection = forms.map((form) => ({
-            createdAt: form.createdAt,
-            form: form.form
-        }))
+            return NextResponse.json(form, { status: 200 });
+        } else {
+            //get forms where the use is the creator of the forms
+            const forms = await prisma.formParticipation.findMany({
+                where: {
+                    userId,
+                    role: "CREATOR"
+                },
+                include: {
+                    form: true
+                }
+            })
 
-        return NextResponse.json(formSelection, { status: 200 });
+            const formSelection = forms.map((form) => ({
+                createdAt: form.createdAt,
+                form: form.form
+            }))
+
+            return NextResponse.json(formSelection, { status: 200 });
+        }
     } catch (error) {
         console.error('Error fetching forms:', error);
         return NextResponse.json({ error: 'Error fetching forms' }, { status: 500 });
@@ -44,7 +68,7 @@ export async function POST(req: NextRequest) {
 
         const form = await prisma.form.create({
             data: {
-                name: title,
+                title: title,
                 participations: {
                     create: []
                 },
