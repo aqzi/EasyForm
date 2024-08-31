@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { responseTypes, responseRenderComponent, responseLabels } from './responseRender';
+import { responseTypes, responseRender, responseLabels } from './responseRender';
 import useFormEditorStore from '@/store/formEditor';
 import { sortableItem } from '@/store/formEditor';
 
-const SortableItemRender = ({ item, seqNumber }: { 
+const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: { 
     item: sortableItem,
-    seqNumber: number
+    seqNumber: number,
+    creatorModeIsActive: boolean
 }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
     const { setQuestion, setResponseType, setResponse } = useFormEditorStore((state) => ({
@@ -58,7 +59,7 @@ const SortableItemRender = ({ item, seqNumber }: {
                                 wrap="soft"
                             />
                             <div className='mt-2'>
-                                {responseRenderComponent({ responseItem: item })}
+                                {responseRender({ responseItem: item, creatorModeIsActive: creatorModeIsActive })}
                             </div>
                         </div>
                     </div>

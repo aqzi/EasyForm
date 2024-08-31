@@ -36,7 +36,7 @@ const TableBody: React.FC<{ forms: FormSelection[], handlePublish: (formId: stri
     const session = useSession();
 
     const handleEdit = (formId: string) => {
-        router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm?formId=${formId}`);
+        router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`);
     };
 
     return (

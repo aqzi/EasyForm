@@ -7,16 +7,12 @@ import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
 import FormRender from '@/components/formEditor/formRender';
 
-const CreateForm = () => {
+const ViewForm: React.FC = () => {
     const { title, sortableItems, addSortableItem } = useFormEditorStore((state) => ({
         title: state.title,
         sortableItems: state.sortableItems,
         addSortableItem: state.addSortableItem,
     }))
-
-    const handleAddQuestion = () => {
-        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
-    }
 
     const handleSave = async () => {
         try {
@@ -51,9 +47,13 @@ const CreateForm = () => {
         }
     };
 
+    const handleAddQuestion = () => {
+        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
+    }
+
     return (
         <Skeleton options={['myForms', 'statistics', 'settings']}>
-            <FormRender creatorModeIsActive={true}/>
+            <FormRender creatorModeIsActive={false}/>
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={handleSave}
@@ -65,19 +65,9 @@ const CreateForm = () => {
                         Save
                     </span>
                 </button>
-                <button
-                    onClick={handleAddQuestion}
-                    className="group relative w-16 h-16 bg-transparent border-none focus:outline-none"
-                    aria-label="Add new form"
-                >
-                    <Plus/>
-                    <span className="absolute inset-0 flex items-center justify-center text-transparent group-hover:text-white transition-all duration-300 ease-in-out">
-                        New
-                    </span>
-                </button>
             </div>
         </Skeleton>
     )
 }
 
-export default CreateForm
+export default ViewForm

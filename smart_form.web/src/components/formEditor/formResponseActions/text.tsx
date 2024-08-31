@@ -2,11 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import useFormEditorStore from '@/store/formEditor';
 import { responseItem } from '../responseRender';
 
-const TextResponse = ({ responseItem }: { responseItem: responseItem }) => {
+const TextResponse = ({ responseItem, creatorModeIsActive }: { responseItem: responseItem, creatorModeIsActive: boolean }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { creatorModeIsActive, sortableItems, setResponse, setPlaceholder } = useFormEditorStore((state) => ({
-        creatorModeIsActive: state.creatorModeIsActive,
-        sortableItems: state.sortableItems,
+    const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
         setPlaceholder: state.setPlaceholder,
     }));

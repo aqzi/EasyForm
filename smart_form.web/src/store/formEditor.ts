@@ -1,4 +1,4 @@
-import { responseTypes } from '@/components/createForm/responseRender';
+import { responseTypes } from '@/components/formEditor/responseRender';
 import { create } from 'zustand'
 
 export interface sortableItem {
@@ -12,8 +12,10 @@ export interface sortableItem {
 
 interface FormEditorState {
     creatorModeIsActive: boolean,
+    title: string,
     sortableItems: sortableItem[],
     setCreatorModeIsActive: (isActive: boolean) => void,
+    setTitle: (title: string) => void,
     setSortableItems: (questions: sortableItem[]) => void,
     addSortableItem: (question: sortableItem) => void,
     removeSortableItem: (id: string) => void,
@@ -26,8 +28,10 @@ interface FormEditorState {
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
     creatorModeIsActive: true,
+    title: '',
     sortableItems: [{ id: '1', question: '', responseType: 'text', response: '' }],
     setCreatorModeIsActive: (isActive: boolean) => set({ creatorModeIsActive: isActive }),
+    setTitle: (title: string) => set({ title: title }),
     setSortableItems: (sortableItems: sortableItem[]) => set({ sortableItems: sortableItems }),
     addSortableItem: (question: sortableItem) => {
         set((state) => ({

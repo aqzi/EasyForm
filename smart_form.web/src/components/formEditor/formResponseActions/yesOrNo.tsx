@@ -2,10 +2,9 @@ import React from 'react';
 import useFormEditorStore from '@/store/formEditor';
 import { responseItem } from '../responseRender';
 
-const YesOrNoResponse = ({ responseItem }: { responseItem: responseItem }) => {
-    const { setResponse, creatorModeIsActive, setPlaceholder } = useFormEditorStore((state) => ({
+const YesOrNoResponse = ({ responseItem, creatorModeIsActive }: { responseItem: responseItem, creatorModeIsActive: boolean }) => {
+    const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
-        creatorModeIsActive: state.creatorModeIsActive,
         setPlaceholder: state.setPlaceholder,
     }));
 

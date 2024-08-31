@@ -7,16 +7,12 @@ import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
 import FormRender from '@/components/formEditor/formRender';
 
-const CreateForm = () => {
+const EditForm: React.FC = () => {
     const { title, sortableItems, addSortableItem } = useFormEditorStore((state) => ({
         title: state.title,
         sortableItems: state.sortableItems,
         addSortableItem: state.addSortableItem,
     }))
-
-    const handleAddQuestion = () => {
-        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
-    }
 
     const handleSave = async () => {
         try {
@@ -51,8 +47,12 @@ const CreateForm = () => {
         }
     };
 
+    const handleAddQuestion = () => {
+        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
+    }
+
     return (
-        <Skeleton options={['myForms', 'statistics', 'settings']}>
+        <Skeleton options={['createForm', 'myForms', 'statistics', 'settings']}>
             <FormRender creatorModeIsActive={true}/>
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
@@ -65,6 +65,7 @@ const CreateForm = () => {
                         Save
                     </span>
                 </button>
+
                 <button
                     onClick={handleAddQuestion}
                     className="group relative w-16 h-16 bg-transparent border-none focus:outline-none"
@@ -80,4 +81,4 @@ const CreateForm = () => {
     )
 }
 
-export default CreateForm
+export default EditForm

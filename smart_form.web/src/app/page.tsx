@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Zap, Smile, Sliders } from 'lucide-react'
-import LoginForm from '@/components/forms/loginForm'
+import LoginForm from '@/components/auth/loginForm'
 import { cookies } from 'next/headers'
 import ThemeToggle from '@/components/layout/themeToggle'
 import { auth } from '@/auth'

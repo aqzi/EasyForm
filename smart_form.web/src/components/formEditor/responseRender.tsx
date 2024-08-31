@@ -20,20 +20,23 @@ export interface responseItem {
     id: string
 }
 
-export const responseRenderComponent = ({ responseItem }: { 
-    responseItem: responseItem
+export const responseRender = ({ responseItem, creatorModeIsActive }: { 
+    responseItem: responseItem,
+    creatorModeIsActive: boolean
 }) => {
     switch (responseItem.responseType) {
         case 'text':
             return (
                 <TextResponse
                     responseItem={responseItem}
+                    creatorModeIsActive={creatorModeIsActive}
                 />
             );
         case 'yesOrNo':
             return (
                 <YesOrNoResponse
                     responseItem={responseItem}
+                    creatorModeIsActive={creatorModeIsActive}
                 />
             );
         default:
