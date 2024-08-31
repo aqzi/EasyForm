@@ -11,10 +11,8 @@ export interface sortableItem {
 }
 
 interface FormEditorState {
-    creatorModeIsActive: boolean,
     title: string,
     sortableItems: sortableItem[],
-    setCreatorModeIsActive: (isActive: boolean) => void,
     setTitle: (title: string) => void,
     setSortableItems: (questions: sortableItem[]) => void,
     addSortableItem: (question: sortableItem) => void,
@@ -27,10 +25,8 @@ interface FormEditorState {
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
-    creatorModeIsActive: true,
     title: '',
     sortableItems: [{ id: '1', question: '', responseType: 'text', response: '' }],
-    setCreatorModeIsActive: (isActive: boolean) => set({ creatorModeIsActive: isActive }),
     setTitle: (title: string) => set({ title: title }),
     setSortableItems: (sortableItems: sortableItem[]) => set({ sortableItems: sortableItems }),
     addSortableItem: (question: sortableItem) => {
@@ -66,7 +62,7 @@ const useFormEditorStore = create<FormEditorState>()((set) => ({
     resetForm: () => {
         set({
             sortableItems: [{ id: '1', question: '', responseType: 'text', response: '' }],
-            creatorModeIsActive: true,
+            title: '',
         })
     }
 }))

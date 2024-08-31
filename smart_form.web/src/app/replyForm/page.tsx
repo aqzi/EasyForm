@@ -10,16 +10,9 @@ export default function RespondPage() {
     const searchParams = useSearchParams();
     const formId = searchParams.get('formId');
 
-    const { creatorModeIsActive, setCreatorModeIsActive } = useFormEditorStore((state) => ({
-        creatorModeIsActive: state.creatorModeIsActive,
-        setCreatorModeIsActive: state.setCreatorModeIsActive,
-    }))
-
     useEffect(() => {
         const fetchForm = async () => {
             if (formId) {
-                setCreatorModeIsActive(false);
-
                 try {
                     const response = await fetch(`/api/form?id=${formId}`);
 
