@@ -3,6 +3,7 @@ import { Menu, Save, List, BarChart2, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
+import { useSearchParams } from 'next/navigation';
 
 export type DropdownOption = 'myForms' | 'createForm' | 'statistics' | 'settings';
 

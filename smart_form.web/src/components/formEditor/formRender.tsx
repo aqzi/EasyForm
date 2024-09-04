@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import useFormEditorStore from '@/store/formEditor';
 
 
-const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
+const FormRender = ({creatorModeIsActive, endpoint}: {creatorModeIsActive: boolean, endpoint: string}) => {
     const containerRef = useRef<HTMLDivElement>(null)
 
     const searchParams = useSearchParams();
@@ -44,13 +44,15 @@ const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
         const fetchForm = async () => {
             if (formId) {
                 try {
-                    const response = await fetch(`/api/form?id=${formId}`);
+                    const response = await fetch(`/api/${endpoint}?id=${formId}`);
 
                     if (!response.ok) {
                         throw new Error('Failed to fetch form');
                     }
 
                     const data = await response.json();
+
+                    console.log(data)
                     
                     setTitle(data.title)
                     setSortableItems(data.fields)

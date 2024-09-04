@@ -8,10 +8,9 @@ import useFormEditorStore from '@/store/formEditor';
 import FormRender from '@/components/formEditor/formRender';
 
 const ViewForm: React.FC = () => {
-    const { title, sortableItems, addSortableItem } = useFormEditorStore((state) => ({
+    const { title, sortableItems } = useFormEditorStore((state) => ({
         title: state.title,
-        sortableItems: state.sortableItems,
-        addSortableItem: state.addSortableItem,
+        sortableItems: state.sortableItems
     }))
 
     const handleSave = async () => {
@@ -47,13 +46,9 @@ const ViewForm: React.FC = () => {
         }
     };
 
-    const handleAddQuestion = () => {
-        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
-    }
-
     return (
         <Skeleton options={['myForms', 'statistics', 'settings']}>
-            <FormRender creatorModeIsActive={false}/>
+            <FormRender creatorModeIsActive={false} endpoint="form"/>
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={handleSave}

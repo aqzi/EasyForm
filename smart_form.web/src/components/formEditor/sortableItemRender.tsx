@@ -37,9 +37,11 @@ const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: {
             onMouseLeave={handleMouseLeave}
         >
             <div className="flex items-start mb-2">
-                <div {...attributes} {...listeners} className="opacity-0 group-hover:opacity-100 cursor-move mr-2 mt-1">
-                    <GripVertical size={16} className="text-gray-400" />
-                </div>
+                {creatorModeIsActive && (
+                    <div {...attributes} {...listeners} className="opacity-0 group-hover:opacity-100 cursor-move mr-2 mt-1">
+                        <GripVertical size={16} className="text-gray-400" />
+                    </div>
+                )}
                 <div className='flex flex-col w-full'>
                     <div className='flex flex-row items-start'>
                         <span className="text-gray-400 mr-3">{seqNumber}.</span>
@@ -66,25 +68,25 @@ const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: {
                 </div>
             </div>
             
-            {/* New expand button */}
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex justify-center items-center text-gray-400 hover:text-gray-200 transition-colors duration-200 opacity-0 group-hover:opacity-100"
-                aria-label={isExpanded ? 'Hide options' : 'Show more options'}
-            >
-                <div className="flex items-center space-x-2">
-                    <div className="w-16 h-px bg-gray-600"></div>
-                    <ChevronUp
-                        size={16}
-                        className={`transform transition-transform duration-300 ${
-                            isExpanded ? 'rotate-0' : 'rotate-180'
-                        }`}
-                    />
-                    <div className="w-16 h-px bg-gray-600"></div>
-                </div>
-            </button>
+            {creatorModeIsActive && (
+                <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="w-full flex justify-center items-center text-gray-400 hover:text-gray-200 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                    aria-label={isExpanded ? 'Hide options' : 'Show more options'}
+                >
+                    <div className="flex items-center space-x-2">
+                        <div className="w-16 h-px bg-gray-600"></div>
+                            <ChevronUp
+                                size={16}
+                                className={`transform transition-transform duration-300 ${
+                                    isExpanded ? 'rotate-0' : 'rotate-180'
+                                }`}
+                            />
+                        <div className="w-16 h-px bg-gray-600"></div>
+                    </div>
+                </button>
+            )}
 
-            {/* New expanded container */}
             {isExpanded && (
                 <div className="mt-4 bg-[#2f2f2f] rounded-md p-4 mb-1 border border-gray-700">
                     <h3 className="text-gray-200 font-medium mb-2">Select Response Type</h3>

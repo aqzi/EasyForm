@@ -14,11 +14,9 @@ export async function GET(req: NextRequest) {
         const formId = req.nextUrl.searchParams.get('id')
 
         if (formId) {
-            const formIdInt = parseInt(formId || '0', 10);
-
             // Get specific form
             const form = await prisma.form.findUnique({
-                where: { id: formIdInt },
+                where: { id: formId },
                 include: {
                     fields: true
                 }
@@ -31,10 +29,9 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(form, { status: 200 });
         } else {
             //get forms where the use is the creator of the forms
-            const forms = await prisma.formParticipation.findMany({
+            const forms = await prisma.formCreator.findMany({
                 where: {
-                    userId,
-                    role: "CREATOR"
+                    userId
                 },
                 include: {
                     form: true
@@ -42,7 +39,6 @@ export async function GET(req: NextRequest) {
             })
 
             const formSelection = forms.map((form) => ({
-                createdAt: form.createdAt,
                 form: form.form
             }))
 
@@ -69,29 +65,23 @@ export async function POST(req: NextRequest) {
         const form = await prisma.form.create({
             data: {
                 title: title,
-                participations: {
-                    create: []
-                },
-                
                 fields: {
                     create: fields,
                 },
-                
             },
             include: {
                 fields: true,
             },
         });
 
-        const formParticipation = await prisma.formParticipation.create({
+        const formCreator = await prisma.formCreator.create({
             data: {
                 formId: form.id,
-                userId,
-                role: "CREATOR",
+                userId
             },
         });
 
-        return NextResponse.json({ form, formParticipation }, { status: 201 });
+        return NextResponse.json({ form, formCreator }, { status: 201 });
     } catch (error) {
         console.error('Error creating form:', error);
         return NextResponse.json({ error: 'Error creating form' }, { status: 500 });

@@ -6,7 +6,8 @@ import Link from 'next/link'
 import FormOptionsDropdown from '@/components/layout/dropdown';
 import Skeleton from '@/components/layout/skeleton';
 import { useSession } from 'next-auth/react';
-import { Edit, Eye, Share2 } from 'lucide-react';
+import { Edit, Eye, EyeOff, Share2, Copy, Check, X, ChevronUp, ChevronDown } from 'lucide-react';
+import SharePopup from '@/components/sharePopup';
 
 interface Form {
     id: string;
@@ -16,7 +17,6 @@ interface Form {
 }
 
 interface FormSelection {
-    createdAt: string;
     form: Form;
 }
 
@@ -31,46 +31,84 @@ const TableHeader: React.FC = () => (
     </thead>
 );
 
-const TableBody: React.FC<{ forms: FormSelection[], handlePublish: (formId: string, formTitle: string) => void }> = ({ forms, handlePublish }) => {
+const TableBody: React.FC<{ forms: FormSelection[] }> = ({ forms }) => {
     const router = useRouter();
     const session = useSession();
+    const [expandedFormId, setExpandedFormId] = useState<string | null>(null);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [shareFormId, setShareFormId] = useState<string | null>(null);
 
     const handleEdit = (formId: string) => {
         router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`);
     };
 
+    const handleShare = (formId: string) => {
+        setShareFormId(formId);
+    };
+
+    const toggleExpand = (formId: string) => {
+        setExpandedFormId(prevId => prevId === formId ? null : formId);
+    };
+
     return (
         <tbody className="bg-[#202020] divide-y divide-gray-700">
             {forms.map((form) => (
-                <tr key={form.form.id} className="hover:bg-gray-700 transition-colors duration-200">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-200">{form.form.title}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-400">{new Date(form.createdAt).toLocaleDateString()}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-400">{form.form.responses ?? 0}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button 
-                            onClick={() => handleEdit(form.form.id)} 
-                            className="text-blue-400 hover:text-blue-300 mr-2 transition-colors duration-200 inline-flex items-center"
-                        >
-                            <Edit className="h-4 w-4" />
-                        </button>
-                        <Link href={`/forms/${form.form.id}/responses`} className="text-blue-400 hover:text-blue-300 mr-2 transition-colors duration-200 inline-flex items-center">
-                            <Eye className="h-4 w-4" />
-                        </Link>
-                        <button
-                            className="text-green-400 hover:text-green-300 transition-colors duration-200 inline-flex items-center"
-                            onClick={() => handlePublish(form.form.id, form.form.title)}
-                        >
-                            <Share2 className="h-4 w-4" />
-                        </button>
-                    </td>
-                </tr>
+                <React.Fragment key={form.form.id}>
+                    <tr className="hover:bg-gray-700 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-200">{form.form.title}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-400">{new Date(form.form.createdAt).toLocaleDateString()}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-400">{form.form.responses ?? 0}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-4">
+                                <button
+                                    onClick={() => handleEdit(form.form.id)}
+                                    className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                                    title="Edit Form"
+                                >
+                                    <Edit size={18} />
+                                </button>
+                                <button
+                                    onClick={() => handleShare(form.form.id)}
+                                    className="text-green-400 hover:text-green-300 transition-colors duration-200"
+                                    title={copiedId === form.form.id ? 'Copied!' : 'Share Form'}
+                                >
+                                    {copiedId === form.form.id ? <Copy size={18} /> : <Share2 size={18} />}
+                                </button>
+                                <button 
+                                    onClick={() => toggleExpand(form.form.id)}
+                                    className="text-purple-400 hover:text-purple-300 transition-colors duration-200"
+                                    title={expandedFormId === form.form.id ? 'Hide Responses' : 'Show Responses'}
+                                >
+                                    {expandedFormId === form.form.id ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {expandedFormId === form.form.id && (
+                        <tr>
+                            <td colSpan={4} className="px-6 py-4">
+                                <div className="bg-gray-800 p-4 rounded-md">
+                                    <h3 className="text-lg font-semibold mb-2">Responses for &quot;{form.form.title}&quot;</h3>
+                                    {/* Add a table or list of responses here */}
+                                    <p className="text-gray-400">Response details will be displayed here.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    )}
+                </React.Fragment>
             ))}
+            {shareFormId && (
+                <SharePopup
+                    url={`${window.location.origin}/respondForm?formId=${shareFormId}`}
+                    onClose={() => setShareFormId(null)}
+                />
+            )}
         </tbody>
     );
 };
@@ -108,37 +146,6 @@ const UserForms: React.FC = () => {
                     forms.length === 0 ? 'No forms found. Create your first form!' : 
                     null;
 
-    const handlePublish = async (formId: string, formTitle: string) => {
-        try {
-            const uniqueId = generateUniqueId(); // Implement this function
-            const publicUrl = `/EasyForm/${encodeURIComponent(formTitle)}/${uniqueId}`;
-            
-            const response = await fetch(`/api/form/${formId}/publish`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ publicUrl }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to publish form');
-            }
-
-            const updatedForm = await response.json();
-            setForms(forms.map(f => f.form.id === formId ? { ...f, form: updatedForm } : f));
-            console.log(`Form published at: ${publicUrl}`);
-        } catch (err) {
-            console.error('Error publishing form:', err);
-            // Show error message to user
-        }
-    };
-
-    // Add this helper function
-    const generateUniqueId = () => {
-        return Math.random().toString(36).substr(2, 9);
-    };
-
     return (
         <Skeleton options={['createForm', 'statistics', 'settings']}>
             <div className='max-w-3xl mx-auto mt-8 w-[650px]'>
@@ -155,7 +162,7 @@ const UserForms: React.FC = () => {
                     <div className="overflow-hidden bg-transparent shadow-lg rounded-lg">
                         <table className="w-full border-separate border-spacing-y-2">
                             <TableHeader />
-                            <TableBody forms={forms} handlePublish={handlePublish} />
+                            <TableBody forms={forms} />
                         </table>
                     </div>
                 )}

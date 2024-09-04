@@ -48,12 +48,12 @@ const EditForm: React.FC = () => {
     };
 
     const handleAddQuestion = () => {
-        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
+        addSortableItem()
     }
 
     return (
         <Skeleton options={['createForm', 'myForms', 'statistics', 'settings']}>
-            <FormRender creatorModeIsActive={true}/>
+            <FormRender creatorModeIsActive={true} endpoint="form"/>
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={handleSave}

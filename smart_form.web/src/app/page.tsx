@@ -27,7 +27,7 @@ export default async function Home() {
           <p className="text-xl mb-8">Smart Form revolutionizes the way you collect and analyze data.</p>
           { !session && (
             <div className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-full text-xl font-bold hover:bg-yellow-300 transition-colors inline-block">
-              Login to access beta - It's Free!
+              Login to access beta - It&apos;s Free!
             </div>
           )}
         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Plus from '@/components/customSvg/plus';
 import Save from '@/components/customSvg/save';
 import Skeleton from '@/components/layout/skeleton';
@@ -15,7 +15,7 @@ const CreateForm = () => {
     }))
 
     const handleAddQuestion = () => {
-        addSortableItem({ id: Date.now().toString(), question: '', responseType: 'text', response: '' })
+        addSortableItem()
     }
 
     const handleSave = async () => {
@@ -53,7 +53,7 @@ const CreateForm = () => {
 
     return (
         <Skeleton options={['myForms', 'statistics', 'settings']}>
-            <FormRender creatorModeIsActive={true}/>
+            <FormRender creatorModeIsActive={true} endpoint="form"/>
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={handleSave}

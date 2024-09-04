@@ -13,27 +13,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum ParticipationRole {
-  CREATOR
-  RESPONDER
+enum FormResponseType {
+  text
+  multipleChoice
+  checkbox
+  image
+  file
+  date
+  yesOrNo
 }
 
 model Form {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(uuid())
   title  String
   fields Field[]
-  participations FormParticipation[]
+  formCreators FormCreator[]
+  formResponses FormResponse[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model FormParticipation {
+model FormCreator {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   form      Form     @relation(fields: [formId], references: [id])
-  formId    Int
-  role      ParticipationRole
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  formId    String
 
   @@unique([userId, formId])
 }
@@ -41,13 +46,45 @@ model FormParticipation {
 model Field {
   id    Int     @id @default(autoincrement())
   question  String
-  responseType  String @default("text")
-  response String
+  responseType  FormResponseType @default(text)
   placeholder String?
   config Json?
   sequenceNumber Int @default(1)
   form  Form    @relation(fields: [formId], references: [id])
-  formId  Int
+  formId  String
+  fieldResponses FieldResponse[]
+}
+
+model FormResponse {
+  id String @id @default(uuid())
+  form Form @relation(fields: [formId], references: [id])
+  formId String
+  fieldResponses FieldResponse[]
+  submitted_at DateTime @default(now())
+  formResponder FormResponder?
+}
+
+model FieldResponse {
+  id Int @id @default(autoincrement())
+  formResponse FormResponse @relation(fields: [formResponseId], references: [id])
+  formResponseId String
+  field Field @relation(fields: [fieldId], references: [id])
+  fieldId Int
+  response String
+
+  @@unique([formResponseId, fieldId])
+}
+
+model FormResponder {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  formResponse FormResponse @relation(fields: [formResponseId], references: [id])
+  formResponseId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, formResponseId])
 }
 
 model User {
@@ -60,7 +97,8 @@ model User {
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
-  formParticipations FormParticipation[]
+  formCreator FormCreator[]
+  formResponder FormResponder[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
