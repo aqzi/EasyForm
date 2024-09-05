@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Save, List, BarChart2, Settings } from 'lucide-react';
+import { Menu, Save, List, BarChart2, Settings, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
@@ -23,7 +23,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
 
     const buttonConfig = {
         myForms: { icon: List, text: 'My Forms', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`) },
-        createForm: { icon: List, text: 'Create Form', onClick: () => {
+        createForm: { icon: FileText, text: 'Create Form', onClick: () => {
             resetForm();
             router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`)
         } },
