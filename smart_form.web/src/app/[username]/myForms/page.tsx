@@ -121,7 +121,7 @@ const UserForms: React.FC = () => {
     useEffect(() => {
         const fetchForms = async () => {
             try {
-                const response = await fetch('/api/form');
+                const response = await fetch('/api/formOverview');
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch forms');

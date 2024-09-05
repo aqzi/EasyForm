@@ -25,14 +25,13 @@ const CreateForm = () => {
                 fields: sortableItems.map((s, index) => ({
                     question: s.question,
                     responseType: s.responseType,
-                    response: s.response,
                     placeholder: s.placeholder,
                     config: s.config,
                     sequenceNumber: index + 1
                 }))
             };
 
-            const response = await fetch('/api/form', {
+            const response = await fetch('/api/createForm', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +52,7 @@ const CreateForm = () => {
 
     return (
         <Skeleton options={['myForms', 'statistics', 'settings']}>
-            <FormRender creatorModeIsActive={true} endpoint="form"/>
+            <FormRender creatorModeIsActive={true} />
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={handleSave}

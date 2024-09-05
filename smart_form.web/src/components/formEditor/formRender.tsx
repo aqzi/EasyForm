@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import useFormEditorStore from '@/store/formEditor';
 
 
-const FormRender = ({creatorModeIsActive, endpoint}: {creatorModeIsActive: boolean, endpoint: string}) => {
+const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
     const containerRef = useRef<HTMLDivElement>(null)
 
     const searchParams = useSearchParams();
@@ -40,30 +40,30 @@ const FormRender = ({creatorModeIsActive, endpoint}: {creatorModeIsActive: boole
         return () => window.removeEventListener('resize', resizeContainer)
     }, [])
 
-    useEffect(() => {
-        const fetchForm = async () => {
-            if (formId) {
-                try {
-                    const response = await fetch(`/api/${endpoint}?id=${formId}`);
+    // useEffect(() => {
+    //     const fetchForm = async () => {
+    //         if (formId) {
+    //             try {
+    //                 const response = await fetch(`/api/${endpoint}?id=${formId}`);
 
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch form');
-                    }
+    //                 if (!response.ok) {
+    //                     throw new Error('Failed to fetch form');
+    //                 }
 
-                    const data = await response.json();
+    //                 const data = await response.json();
 
-                    console.log(data)
+    //                 console.log(data)
                     
-                    setTitle(data.title)
-                    setSortableItems(data.fields)
-                } catch (error) {
-                    console.error('Error fetching form:', error);
-                }
-            }
-        };
+    //                 setTitle(data.title)
+    //                 setSortableItems(data.fields)
+    //             } catch (error) {
+    //                 console.error('Error fetching form:', error);
+    //             }
+    //         }
+    //     };
 
-        fetchForm();
-    }, [formId]);
+    //     fetchForm();
+    // }, [formId]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
