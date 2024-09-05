@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         })
 
         const formSelection = forms.map((formCreator) => ({
-            id: formCreator.form.id,
+            formId: formCreator.form.id,
             title: formCreator.form.title,
             createdAt: formCreator.form.createdAt.toISOString(),
             responses: formCreator.form._count.formResponses
