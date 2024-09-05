@@ -18,19 +18,21 @@ export async function GET(req: NextRequest) {
             include: {
                 form: {
                     include: {
-                        _count: {
-                            select: { formResponses: true }
-                        }
+                        formResponses: true
                     }
                 }
             }
         })
 
-        const formSelection = forms.map((formCreator) => ({
-            formId: formCreator.form.id,
-            title: formCreator.form.title,
-            createdAt: formCreator.form.createdAt.toISOString(),
-            responses: formCreator.form._count.formResponses
+        const formSelection = forms.map((f) => ({
+            formId: f.form.id,
+            title: f.form.title,
+            createdAt: f.form.createdAt.toISOString(),
+            responses: f.form.formResponses.map(r => ({
+                responseId: r.id,
+                submittedAt: r.submitted_at.toISOString(),
+                //maybe extend with total time taken to fill the form
+            }))
         }))
 
         return NextResponse.json(formSelection, { status: 200 });

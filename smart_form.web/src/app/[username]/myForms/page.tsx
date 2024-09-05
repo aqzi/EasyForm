@@ -2,19 +2,20 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'
-import FormOptionsDropdown from '@/components/layout/dropdown';
 import Skeleton from '@/components/layout/skeleton';
 import { useSession } from 'next-auth/react';
-import { Edit, Eye, EyeOff, Share2, Copy, Check, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Edit, Eye, EyeOff, Share2, Copy } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
 
-interface Form 
+interface Form
 {
     formId: string;
     title: string;
     createdAt: string;
-    responses: number;
+    responses: {
+        responseId: string;
+        submittedAt: string;
+    }[];
 }
 
 const TableHeader: React.FC = () => (
@@ -59,7 +60,7 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                             <div className="text-sm text-gray-400">{new Date(form.createdAt).toLocaleDateString()}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-400">{form.responses ?? 0}</div>
+                            <div className="text-sm text-gray-400">{form.responses.length}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-4">
@@ -94,6 +95,11 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                     <h3 className="text-lg font-semibold mb-2">Responses for &quot;{form.title}&quot;</h3>
                                     {/* Add a table or list of responses here */}
                                     <p className="text-gray-400">Response details will be displayed here.</p>
+                                    {form.responses.map(r => (
+                                        <div key={r.responseId}>
+                                            <p>Submitted at: {new Date(r.submittedAt).toLocaleDateString()}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </td>
                         </tr>
