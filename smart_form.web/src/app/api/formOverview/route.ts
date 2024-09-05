@@ -16,12 +16,21 @@ export async function GET(req: NextRequest) {
                 userId
             },
             include: {
-                form: true
+                form: {
+                    include: {
+                        _count: {
+                            select: { formResponses: true }
+                        }
+                    }
+                }
             }
         })
 
-        const formSelection = forms.map((form) => ({
-            form: form.form
+        const formSelection = forms.map((formCreator) => ({
+            id: formCreator.form.id,
+            title: formCreator.form.title,
+            createdAt: formCreator.form.createdAt.toISOString(),
+            responses: formCreator.form._count.formResponses
         }))
 
         return NextResponse.json(formSelection, { status: 200 });

@@ -9,15 +9,12 @@ import { useSession } from 'next-auth/react';
 import { Edit, Eye, EyeOff, Share2, Copy, Check, X, ChevronUp, ChevronDown } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
 
-interface Form {
-    id: string;
+interface Form 
+{
+    formId: string;
     title: string;
     createdAt: string;
     responses: number;
-}
-
-interface FormSelection {
-    form: Form;
 }
 
 const TableHeader: React.FC = () => (
@@ -31,7 +28,7 @@ const TableHeader: React.FC = () => (
     </thead>
 );
 
-const TableBody: React.FC<{ forms: FormSelection[] }> = ({ forms }) => {
+const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     const router = useRouter();
     const session = useSession();
     const [expandedFormId, setExpandedFormId] = useState<string | null>(null);
@@ -53,48 +50,48 @@ const TableBody: React.FC<{ forms: FormSelection[] }> = ({ forms }) => {
     return (
         <tbody className="bg-[#202020] divide-y divide-gray-700">
             {forms.map((form) => (
-                <React.Fragment key={form.form.id}>
+                <React.Fragment key={form.formId}>
                     <tr className="hover:bg-gray-700 transition-colors duration-200">
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-200">{form.form.title}</div>
+                            <div className="text-sm font-medium text-gray-200">{form.title}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-400">{new Date(form.form.createdAt).toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-400">{new Date(form.createdAt).toLocaleDateString()}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-400">{form.form.responses ?? 0}</div>
+                            <div className="text-sm text-gray-400">{form.responses ?? 0}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-4">
                                 <button
-                                    onClick={() => handleEdit(form.form.id)}
+                                    onClick={() => handleEdit(form.formId)}
                                     className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
                                     title="Edit Form"
                                 >
                                     <Edit size={18} />
                                 </button>
                                 <button
-                                    onClick={() => handleShare(form.form.id)}
+                                    onClick={() => handleShare(form.formId)}
                                     className="text-green-400 hover:text-green-300 transition-colors duration-200"
-                                    title={copiedId === form.form.id ? 'Copied!' : 'Share Form'}
+                                    title={copiedId === form.formId ? 'Copied!' : 'Share Form'}
                                 >
-                                    {copiedId === form.form.id ? <Copy size={18} /> : <Share2 size={18} />}
+                                    {copiedId === form.formId ? <Copy size={18} /> : <Share2 size={18} />}
                                 </button>
                                 <button 
-                                    onClick={() => toggleExpand(form.form.id)}
+                                    onClick={() => toggleExpand(form.formId)}
                                     className="text-purple-400 hover:text-purple-300 transition-colors duration-200"
-                                    title={expandedFormId === form.form.id ? 'Hide Responses' : 'Show Responses'}
+                                    title={expandedFormId === form.formId ? 'Hide Responses' : 'Show Responses'}
                                 >
-                                    {expandedFormId === form.form.id ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {expandedFormId === form.formId ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    {expandedFormId === form.form.id && (
+                    {expandedFormId === form.formId && (
                         <tr>
                             <td colSpan={4} className="px-6 py-4">
                                 <div className="bg-gray-800 p-4 rounded-md">
-                                    <h3 className="text-lg font-semibold mb-2">Responses for &quot;{form.form.title}&quot;</h3>
+                                    <h3 className="text-lg font-semibold mb-2">Responses for &quot;{form.title}&quot;</h3>
                                     {/* Add a table or list of responses here */}
                                     <p className="text-gray-400">Response details will be displayed here.</p>
                                 </div>
@@ -114,7 +111,7 @@ const TableBody: React.FC<{ forms: FormSelection[] }> = ({ forms }) => {
 };
 
 const UserForms: React.FC = () => {
-    const [forms, setForms] = useState<FormSelection[]>([]);
+    const [forms, setForms] = useState<Form[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -128,6 +125,9 @@ const UserForms: React.FC = () => {
                 }
 
                 const data = await response.json();
+
+                console.log(data);
+
                 setForms(data);
             } catch (err) {
                 setError('Error fetching forms. Please try again later.');
