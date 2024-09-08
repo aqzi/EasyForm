@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { responseItem } from '../responseRender';
+import { sortableItem } from '@/store/formEditor';
+import { formActivity } from '../formRender';
 
-const TextResponse = ({ responseItem, creatorModeIsActive }: { responseItem: responseItem, creatorModeIsActive: boolean }) => {
+const TextResponse = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
@@ -17,9 +18,9 @@ const TextResponse = ({ responseItem, creatorModeIsActive }: { responseItem: res
     }, [responseItem.response]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (creatorModeIsActive) {
+        if (formActivity === 'createOrEdit') {
             setPlaceholder(responseItem.id, e.target.value);
-        } else {
+        } else if (formActivity === 'reply') {
             setResponse(responseItem.id, e.target.value);
         }
     };
@@ -28,12 +29,18 @@ const TextResponse = ({ responseItem, creatorModeIsActive }: { responseItem: res
         <div className="text-response relative w-full text-white text-sm mt-2">
             <textarea
                 ref={textareaRef}
-                value={creatorModeIsActive ? responseItem.placeholder : responseItem.response}
+                value={formActivity === 'createOrEdit' ? responseItem.placeholder : responseItem.response}
                 onChange={handleChange}
-                className={`w-full min-h-[1.5em] py-2 px-2 resize-none overflow-hidden focus:outline-none bg-transparent border border-gray-500 rounded ${creatorModeIsActive ? 'text-gray-400' : 'text-white'}`}
+                className={`
+                    w-full min-h-[1.5em] py-2 px-2 resize-none overflow-hidden focus:outline-none 
+                    bg-transparent border border-gray-500 rounded text-white
+                    ${formActivity === 'createOrEdit' && 'text-gray-400'}
+                    ${formActivity === 'view' && 'cursor-default'}
+                `}
                 style={{ width: '100%' }}
                 rows={1}
                 placeholder={responseItem.placeholder || 'Type your response here...'}
+                readOnly={formActivity === 'view'}
             />
         </div>
     );

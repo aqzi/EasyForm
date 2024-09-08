@@ -40,6 +40,10 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
         router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`);
     };
 
+    const viewForm = (formId: string) => {
+        router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/viewForm?formId=${formId}`);
+    };
+
     const handleShare = (formId: string) => {
         setShareFormId(formId);
     };
@@ -106,7 +110,10 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                                     {form.responses.map(r => (
                                                         <tr key={r.responseId} className="hover:bg-gray-700 transition-colors duration-200">
                                                             <td className="whitespace-nowrap text-sm text-gray-400 bg-[#303030]">
-                                                                <button className='w-full h-full text-left py-2 px-2'>
+                                                                <button 
+                                                                    onClick={() => viewForm(r.responseId)}
+                                                                    className='w-full h-full text-left py-2 px-2 hover:bg-[#454545]'
+                                                                >
                                                                     {new Date(r.submittedAt).toLocaleDateString()}
                                                                 </button>
                                                             </td>

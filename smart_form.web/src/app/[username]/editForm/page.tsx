@@ -83,7 +83,7 @@ const EditForm: React.FC = () => {
 
     return (
         <Skeleton options={['createForm', 'myForms', 'settings']}>
-            <FormRender creatorModeIsActive={true} />
+            <FormRender formActivity='createOrEdit' />
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={updateForm}

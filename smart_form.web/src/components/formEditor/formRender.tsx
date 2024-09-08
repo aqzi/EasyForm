@@ -8,8 +8,9 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useSearchParams } from 'next/navigation';
 import useFormEditorStore from '@/store/formEditor';
 
+export type formActivity = 'createOrEdit' | 'view' | 'reply'
 
-const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
+const FormRender = ({formActivity}: {formActivity: formActivity}) => {
     const containerRef = useRef<HTMLDivElement>(null)
 
     const searchParams = useSearchParams();
@@ -40,31 +41,6 @@ const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
         return () => window.removeEventListener('resize', resizeContainer)
     }, [])
 
-    // useEffect(() => {
-    //     const fetchForm = async () => {
-    //         if (formId) {
-    //             try {
-    //                 const response = await fetch(`/api/${endpoint}?id=${formId}`);
-
-    //                 if (!response.ok) {
-    //                     throw new Error('Failed to fetch form');
-    //                 }
-
-    //                 const data = await response.json();
-
-    //                 console.log(data)
-                    
-    //                 setTitle(data.title)
-    //                 setSortableItems(data.fields)
-    //             } catch (error) {
-    //                 console.error('Error fetching form:', error);
-    //             }
-    //         }
-    //     };
-
-    //     fetchForm();
-    // }, [formId]);
-
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -89,7 +65,7 @@ const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
                 <SortableItemRender 
                     item={s}
                     seqNumber={index + 1}
-                    creatorModeIsActive={creatorModeIsActive}
+                    formActivity={formActivity}
                 />
             </div>
         ))
@@ -122,16 +98,21 @@ const FormRender = ({creatorModeIsActive}: {creatorModeIsActive: boolean}) => {
             <div className="h-full p-8 flex overflow-auto">
                 <div className="flex-grow">
                     <div className="relative mb-8">
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Untitled Form"
-                            className="text-3xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 hover:bg-gray-800 transition-colors duration-200 ease-in-out px-2 py-1 rounded"
-                        />
+                        {
+                            formActivity === 'createOrEdit' ?
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Untitled Form"
+                                className="text-3xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 hover:bg-gray-800 transition-colors duration-200 ease-in-out px-2 py-1 rounded"
+                            />
+                            :
+                            <p className="text-3xl pb-3 font-bold mb-2 text-gray-200 w-full bg-transparent border-none px-2 py-1 rounded cursor-default">{title}</p>
+                        }
                         <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
                     </div>
-                    {creatorModeIsActive ? DragComponent : SortableItemsRender}
+                    {formActivity === 'createOrEdit' ? DragComponent : SortableItemsRender}
                 </div>
             </div>
         </div>

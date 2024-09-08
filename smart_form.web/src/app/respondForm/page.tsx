@@ -83,7 +83,7 @@ const RespondForm = () => {
                 {
                     !savedSuccessfully ? 
                     <>
-                        <FormRender creatorModeIsActive={false} />
+                        <FormRender formActivity='reply' />
                         <div className="absolute bottom-8 right-8 flex space-x-4">
                             <button
                                 onClick={handleSave}

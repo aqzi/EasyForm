@@ -1,5 +1,7 @@
+import { sortableItem } from '@/store/formEditor';
 import TextResponse from './formResponseActions/text';
 import YesOrNoResponse from './formResponseActions/yesOrNo';
+import { formActivity } from './formRender';
 
 export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo';
 
@@ -13,30 +15,23 @@ export const responseLabels = [
     { value: 'date', label: 'Date' },
 ];
 
-export interface responseItem {
-    responseType: responseTypes,
-    response: string,
-    placeholder?: string,
-    id: string
-}
-
-export const responseRender = ({ responseItem, creatorModeIsActive }: { 
-    responseItem: responseItem,
-    creatorModeIsActive: boolean
+export const responseRender = ({ responseItem, formActivity }: { 
+    responseItem: sortableItem,
+    formActivity: formActivity
 }) => {
     switch (responseItem.responseType) {
         case 'text':
             return (
                 <TextResponse
                     responseItem={responseItem}
-                    creatorModeIsActive={creatorModeIsActive}
+                    formActivity={formActivity}
                 />
             );
         case 'yesOrNo':
             return (
                 <YesOrNoResponse
                     responseItem={responseItem}
-                    creatorModeIsActive={creatorModeIsActive}
+                    formActivity={formActivity}
                 />
             );
         default:

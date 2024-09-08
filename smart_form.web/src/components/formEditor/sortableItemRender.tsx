@@ -5,11 +5,12 @@ import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react
 import { responseTypes, responseRender, responseLabels } from './responseRender';
 import useFormEditorStore from '@/store/formEditor';
 import { sortableItem } from '@/store/formEditor';
+import { formActivity } from './formRender';
 
-const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: { 
+const SortableItemRender = ({ item, seqNumber, formActivity }: { 
     item: sortableItem,
     seqNumber: number,
-    creatorModeIsActive: boolean
+    formActivity: formActivity
 }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
     const { setQuestion, setResponseType, setResponse } = useFormEditorStore((state) => ({
@@ -37,7 +38,7 @@ const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: {
             onMouseLeave={handleMouseLeave}
         >
             <div className="flex items-start mb-2">
-                {creatorModeIsActive && (
+                {formActivity === 'createOrEdit' && (
                     <div {...attributes} {...listeners} className="opacity-0 group-hover:opacity-100 cursor-move mr-2 mt-1">
                         <GripVertical size={16} className="text-gray-400" />
                     </div>
@@ -50,7 +51,7 @@ const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: {
                                 value={item.question}
                                 onChange={(e) => setQuestion(item.id, e.target.value)}
                                 placeholder="Enter your question"
-                                className="w-full bg-transparent text-gray-200 focus:outline-none resize-none overflow-hidden"
+                                className={`w-full bg-transparent text-gray-200 focus:outline-none resize-none overflow-hidden ${formActivity === 'view' ? 'cursor-default' : ''}`}
                                 rows={1}
                                 style={{ minHeight: '1.5em' }}
                                 onInput={(e) => {
@@ -59,16 +60,17 @@ const SortableItemRender = ({ item, seqNumber, creatorModeIsActive }: {
                                     target.style.height = `${target.scrollHeight}px`;
                                 }}
                                 wrap="soft"
+                                readOnly={formActivity === 'view'}
                             />
                             <div className='mt-2'>
-                                {responseRender({ responseItem: item, creatorModeIsActive: creatorModeIsActive })}
+                                {responseRender({ responseItem: item, formActivity: formActivity  })}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            {creatorModeIsActive && (
+            {formActivity === 'createOrEdit' && (
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
                     className="w-full flex justify-center items-center text-gray-400 hover:text-gray-200 transition-colors duration-200 opacity-0 group-hover:opacity-100"
