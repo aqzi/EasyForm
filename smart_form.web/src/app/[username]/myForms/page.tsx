@@ -153,7 +153,7 @@ const UserForms: React.FC = () => {
                     null;
 
     return (
-        <Skeleton options={['createForm', 'statistics', 'settings']}>
+        <Skeleton options={['createForm', 'settings']}>
             <div className='max-w-3xl mx-auto mt-8 w-[650px]'>
                 <div className="relative mb-12">
                     <h1

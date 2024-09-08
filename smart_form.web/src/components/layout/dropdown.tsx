@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
 import { useSearchParams } from 'next/navigation';
 
-export type DropdownOption = 'myForms' | 'createForm' | 'statistics' | 'settings';
+export type DropdownOption = 'myForms' | 'createForm' | 'settings';
 
 interface FormOptionsDropdownProps {
     options: DropdownOption[];
@@ -27,7 +27,6 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
             resetForm();
             router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`)
         } },
-        statistics: { icon: BarChart2, text: 'Statistics', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/statistics`) },
         settings: { icon: Settings, text: 'Settings', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings`) },
     };
 

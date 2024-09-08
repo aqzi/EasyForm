@@ -43,7 +43,7 @@ const ViewFormResponse: React.FC = () => {
     }, [formId]);
 
     return (
-        <Skeleton options={['myForms', 'statistics', 'settings']}>
+        <Skeleton options={['myForms', 'settings']}>
             <FormRender creatorModeIsActive={false} />
         </Skeleton>
     )

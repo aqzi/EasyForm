@@ -51,7 +51,7 @@ const CreateForm = () => {
     };
 
     return (
-        <Skeleton options={['myForms', 'statistics', 'settings']}>
+        <Skeleton options={['myForms', 'settings']}>
             <FormRender creatorModeIsActive={true} />
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button

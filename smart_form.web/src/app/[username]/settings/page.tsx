@@ -12,7 +12,7 @@ const SettingsPage: React.FC = () => {
   const session = useSession()
 
   return (
-    <Skeleton options={['createForm', 'myForms', 'statistics']}>
+    <Skeleton options={['createForm', 'myForms']}>
         <div className='max-w-3xl mx-auto mt-8 w-[595px]'>
             <div className="relative mb-12">
                 <h1 className="text-4xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 px-2 py-4 rounded">
