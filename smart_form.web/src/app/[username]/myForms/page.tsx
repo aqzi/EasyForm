@@ -65,13 +65,6 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-4">
                                 <button
-                                    onClick={() => handleEdit(form.formId)}
-                                    className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                                    title="Edit Form"
-                                >
-                                    <Edit size={18} />
-                                </button>
-                                <button
                                     onClick={() => handleShare(form.formId)}
                                     className="text-green-400 hover:text-green-300 transition-colors duration-200"
                                     title={copiedId === form.formId ? 'Copied!' : 'Share Form'}
@@ -85,21 +78,44 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                 >
                                     {expandedFormId === form.formId ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
+                                {
+                                    form.responses.length === 0 &&
+                                    <button
+                                        onClick={() => handleEdit(form.formId)}
+                                        className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                                        title="Edit Form"
+                                    >
+                                        <Edit size={18} />
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>
                     {expandedFormId === form.formId && (
                         <tr>
                             <td colSpan={4} className="px-6 py-4">
-                                <div className="bg-gray-800 p-4 rounded-md">
-                                    <h3 className="text-lg font-semibold mb-2">Responses for &quot;{form.title}&quot;</h3>
-                                    {/* Add a table or list of responses here */}
-                                    <p className="text-gray-400">Response details will be displayed here.</p>
-                                    {form.responses.map(r => (
-                                        <div key={r.responseId}>
-                                            <p>Submitted at: {new Date(r.submittedAt).toLocaleDateString()}</p>
-                                        </div>
-                                    ))}
+                                <div className="bg-[#292929] p-4 rounded-md">
+                                    {
+                                        form.responses.length === 0 ?
+                                        <p>No responses received yet</p>
+                                        :
+                                        <>
+                                            <h3 className="text-lg font-semibold mb-2">Responses: </h3>
+                                            <table className="w-full border-separate border-spacing-y-2">
+                                                <tbody>
+                                                    {form.responses.map(r => (
+                                                        <tr key={r.responseId} className="hover:bg-gray-700 transition-colors duration-200">
+                                                            <td className="whitespace-nowrap text-sm text-gray-400 bg-[#303030]">
+                                                                <button className='w-full h-full text-left py-2 px-2'>
+                                                                    {new Date(r.submittedAt).toLocaleDateString()}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </>
+                                    }
                                 </div>
                             </td>
                         </tr>
