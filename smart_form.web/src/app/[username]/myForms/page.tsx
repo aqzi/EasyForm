@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation';
 import Skeleton from '@/components/layout/skeleton';
 import { useSession } from 'next-auth/react';
 import { Edit, Eye, EyeOff, Share2, Copy } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
+import Link from 'next/link'
 
 interface Form
 {
@@ -30,19 +30,10 @@ const TableHeader: React.FC = () => (
 );
 
 const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
-    const router = useRouter();
     const session = useSession();
     const [expandedFormId, setExpandedFormId] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [shareFormId, setShareFormId] = useState<string | null>(null);
-
-    const handleEdit = (formId: string) => {
-        router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`);
-    };
-
-    const viewForm = (formId: string) => {
-        router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/viewForm?formId=${formId}`);
-    };
 
     const handleShare = (formId: string) => {
         setShareFormId(formId);
@@ -84,13 +75,20 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                 </button>
                                 {
                                     form.responses.length === 0 &&
-                                    <button
-                                        onClick={() => handleEdit(form.formId)}
+                                    // <button
+                                    //     onClick={() => handleEdit(form.formId)}
+                                    //     className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                                    //     title="Edit Form"
+                                    // >
+                                    //     <Edit size={18} />
+                                    // </button>
+                                    <Link
                                         className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
                                         title="Edit Form"
+                                        href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${form.formId}`}
                                     >
                                         <Edit size={18} />
-                                    </button>
+                                    </Link>
                                 }
                             </div>
                         </td>
@@ -109,13 +107,14 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                                 <tbody>
                                                     {form.responses.map(r => (
                                                         <tr key={r.responseId} className="hover:bg-gray-700 transition-colors duration-200">
-                                                            <td className="whitespace-nowrap text-sm text-gray-400 bg-[#303030]">
-                                                                <button 
-                                                                    onClick={() => viewForm(r.responseId)}
-                                                                    className='w-full h-full text-left py-2 px-2 hover:bg-[#454545]'
+                                                            <td className="whitespace-nowrap h-full w-full text-sm text-gray-400 bg-[#303030] hover:bg-[#454545]">
+                                                                <Link
+                                                                    className='w-full h-full block text-left py-2 px-2'
+                                                                    href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/viewForm?formId=${r.responseId}`}
+                                                                    // prefetch={true}
                                                                 >
                                                                     {new Date(r.submittedAt).toLocaleDateString()}
-                                                                </button>
+                                                                </Link>
                                                             </td>
                                                         </tr>
                                                     ))}

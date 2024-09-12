@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 
 export async function GET(req: NextRequest) {
-    try {
-        const formId = req.nextUrl.searchParams.get('id')
+    const formId = req.nextUrl.searchParams.get('id')
 
+    try {
         if (formId) {
             const form = await prisma.form.findUnique({
                 where: { id: formId },
@@ -30,10 +30,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    const { responses } = await req.json();
+    const formId = req.nextUrl.searchParams.get('id')
+    
     try {
-        const { responses } = await req.json();
-        const formId = req.nextUrl.searchParams.get('id')
-
         if (!formId) {
             return NextResponse.json({ error: 'Form not found' }, { status: 404 });
         }

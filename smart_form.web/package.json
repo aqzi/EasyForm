@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prod:migrate": "dotenv -e .env.production -- npx prisma migrate dev"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
@@ -16,6 +17,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@prisma/client": "5.18.0",
     "chart.js": "^4.4.4",
+    "dotenv-cli": "^7.4.2",
     "lucide-react": "^0.435.0",
     "next": "14.2.6",
     "next-auth": "5.0.0-beta.20",

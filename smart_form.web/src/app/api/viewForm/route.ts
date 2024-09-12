@@ -3,10 +3,10 @@ import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
 export async function GET(req: NextRequest) {
-    try {
-        const session = await auth()
-        const userId = session?.user?.id
+    const session = await auth()
+    const userId = session?.user?.id
 
+    try {
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
         const data = {
             title: response.form.title,
-            fields: response.fieldResponses.map(fr => ({
+            fields: response.fieldResponses.map((fr: any) => ({
                 ...fr.field,
                 response: fr.response
             }))

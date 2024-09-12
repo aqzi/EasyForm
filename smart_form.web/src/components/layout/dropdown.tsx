@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Save, List, BarChart2, Settings, FileText } from 'lucide-react';
+import { Menu, List, Settings, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link'
+
 
 export type DropdownOption = 'myForms' | 'createForm' | 'settings';
 
@@ -22,12 +23,9 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
     }));
 
     const buttonConfig = {
-        myForms: { icon: List, text: 'My Forms', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`) },
-        createForm: { icon: FileText, text: 'Create Form', onClick: () => {
-            resetForm();
-            router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`)
-        } },
-        settings: { icon: Settings, text: 'Settings', onClick: () => router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings`) },
+        myForms: { icon: List, text: 'My Forms', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms` },
+        createForm: { icon: FileText, text: 'Create Form', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`},
+        settings: { icon: Settings, text: 'Settings', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings` },
     };
 
     useEffect(() => {
@@ -63,17 +61,19 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
             >
                 <div className="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     {options.map((option) => {
-                        const { icon: Icon, text, onClick } = buttonConfig[option];
+                        const { icon: Icon, text, href } = buttonConfig[option];
                         return (
-                            <button
+                            <Link
                                 key={option}
-                                onClick={() => { onClick(); setIsOpen(false); }}
                                 className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
                                 role="menuitem"
+                                href={href}
+                                onClick={() => (text === 'Create Form' && resetForm())}
+                                prefetch={true}
                             >
                                 <Icon size={18} className="mr-3 text-gray-400" />
                                 <span className="font-medium">{text}</span>
-                            </button>
+                            </Link>
                         );
                     })}
                 </div>

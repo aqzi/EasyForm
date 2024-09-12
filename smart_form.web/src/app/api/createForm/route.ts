@@ -3,11 +3,11 @@ import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
 export async function POST(req: NextRequest) {
-    try {
-        const { title, fields } = await req.json();
-        const session = await auth()
-        const userId = session?.user?.id
+    const { title, fields } = await req.json();
+    const session = await auth()
+    const userId = session?.user?.id
 
+    try {
         if (!userId) {
             return NextResponse.json({ error: 'Server error' }, { status: 404 });
         }

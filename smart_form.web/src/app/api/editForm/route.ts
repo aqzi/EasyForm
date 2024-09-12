@@ -3,10 +3,10 @@ import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
 export async function GET(req: NextRequest) {
-    try {
-        const session = await auth()
-        const userId = session?.user?.id
+    const session = await auth()
+    const userId = session?.user?.id
 
+    try {
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -38,11 +38,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    try {
-        const { id, title, fields } = await req.json();
-        const session = await auth()
-        const userId = session?.user?.id
+    const { id, title, fields } = await req.json();
+    const session = await auth()
+    const userId = session?.user?.id
 
+    try {
         if (!userId) {
             return NextResponse.json({ error: 'Server error' }, { status: 404 });
         }
@@ -81,7 +81,7 @@ export async function PUT(req: NextRequest) {
         });
 
         // Delete fields that are no longer present
-        const updatedFieldIds = updatedForm.fields.map(field => field.id);
+        const updatedFieldIds = updatedForm.fields.map((field: any) => field.id);
         await prisma.field.deleteMany({
             where: {
                 formId: id,
