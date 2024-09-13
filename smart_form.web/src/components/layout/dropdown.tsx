@@ -24,7 +24,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
 
     const buttonConfig = {
         myForms: { icon: List, text: 'My Forms', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms` },
-        createForm: { icon: FileText, text: 'Create Form', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/createForm`},
+        createForm: { icon: FileText, text: 'Create Form', href: `/createForm`},
         settings: { icon: Settings, text: 'Settings', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings` },
     };
 

@@ -92,7 +92,7 @@ const FormRender = ({formActivity}: {formActivity: formActivity}) => {
     return (
         <div
             ref={containerRef}
-            className="w-[595px] h-[842px] bg-[#151515] origin-center relative mt-40"
+            className="w-[595px] h-[842px] bg-[#1e1e1e] origin-center relative mt-40"
             style={{ transform: 'scale(1)' }}
         >
             <div className="h-full p-8 flex overflow-auto">

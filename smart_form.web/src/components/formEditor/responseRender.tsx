@@ -3,7 +3,7 @@ import TextResponse from './formResponseActions/text';
 import YesOrNoResponse from './formResponseActions/yesOrNo';
 import { formActivity } from './formRender';
 
-export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo';
+export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo' ;
 
 export const responseLabels = [
     { value: 'text', label: 'Text' },
