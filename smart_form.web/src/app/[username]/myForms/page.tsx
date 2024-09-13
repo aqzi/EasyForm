@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Edit, Eye, EyeOff, Share2, Copy } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Form
 {
@@ -142,6 +143,14 @@ const UserForms: React.FC = () => {
     const [forms, setForms] = useState<Form[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+
+    const session = useSession();
+
+    if (!session.data?.user) {
+        router.push(`/register`);
+        return null;
+    }
 
     useEffect(() => {
         const fetchForms = async () => {

@@ -33,7 +33,6 @@ const Register = () => {
                 action={async (formData: FormData) => {
                     "use server"
                     const tmp = formData.get('provider') as string
-                    console.log(tmp)
                     const uri = `/${generateRandomUsername(15)}`
                     await signIn(tmp, { redirectTo: uri })
                 }}

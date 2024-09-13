@@ -28,7 +28,7 @@ export default async function Home() {
           <Link
             href="/createForm"
             prefetch={true}
-            className="bg-[#34d349] text-gray-900 px-5 py-2 rounded-md text-xl font-bold hover:bg-[#3d9749] transition-colors inline-block"
+            className="bg-[#34d349] text-gray-900 px-5 py-2 rounded-md text-xl font-bold hover:bg-[#2cb33e] transition-colors inline-block"
           >
             Get started
           </Link>

@@ -1,16 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
-export async function GET(req: NextRequest) {
-    const session = await auth()
-    const userId = session?.user?.id
+export const GET = auth(async function GET(req) {
+    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
     try {
-        if (!userId) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
         const formId = req.nextUrl.searchParams.get('id')
 
         if (!formId) {
@@ -35,18 +30,14 @@ export async function GET(req: NextRequest) {
     } finally {
         await prisma.$disconnect();
     }
-}
+})
 
-export async function PUT(req: NextRequest) {
+export const PUT = auth(async function PUT(req) {
+    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+
     const { id, title, fields } = await req.json();
-    const session = await auth()
-    const userId = session?.user?.id
-
+    
     try {
-        if (!userId) {
-            return NextResponse.json({ error: 'Server error' }, { status: 404 });
-        }
-
         if (!id) {
             return NextResponse.json({ error: 'Form ID is required' }, { status: 400 });
         }
@@ -96,4 +87,4 @@ export async function PUT(req: NextRequest) {
     } finally {
         await prisma.$disconnect();
     }
-}
+})

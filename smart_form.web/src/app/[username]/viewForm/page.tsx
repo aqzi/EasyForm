@@ -7,12 +7,22 @@ import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
 import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const ViewForm: React.FC = () => {
     const { setTitle, setSortableItems } = useFormEditorStore((state) => ({
         setTitle: state.setTitle,
         setSortableItems: state.setSortableItems,
     }))
+
+    const router = useRouter();
+    const session = useSession();
+
+    if (!session.data?.user) {
+        router.push(`/register`);
+        return null;
+    }
 
     const searchParams = useSearchParams();
     const formId = searchParams.get('formId');

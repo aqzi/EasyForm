@@ -1,11 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req) {
+    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+
+    const userId = req.auth.user?.id
+
     const { title, fields } = await req.json();
-    const session = await auth()
-    const userId = session?.user?.id
 
     try {
         if (!userId) {
@@ -38,4 +40,4 @@ export async function POST(req: NextRequest) {
     } finally {
         await prisma.$disconnect();
     }
-}
+})
