@@ -7,6 +7,7 @@ import { Edit, Eye, EyeOff, Share2, Copy } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import useFormCollectionStore from '@/store/formCollection';
 
 interface Form
 {
@@ -139,12 +140,8 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     );
 };
 
-const UserForms: React.FC = () => {
-    const [forms, setForms] = useState<Form[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+const MyForms: React.FC = () => {
     const router = useRouter();
-
     const session = useSession();
 
     if (!session.data?.user) {
@@ -152,34 +149,20 @@ const UserForms: React.FC = () => {
         return null;
     }
 
+    const { forms, formCollectionIsLoaded, formCollectionError, getForms } = useFormCollectionStore((state) => ({
+        forms: state.forms,
+        formCollectionIsLoaded: state.formCollectionIsLoaded,
+        formCollectionError: state.formCollectionError,
+        getForms: state.getForms,
+    }))
+
     useEffect(() => {
-        const fetchForms = async () => {
-            try {
-                const response = await fetch('/api/formOverview');
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch forms');
-                }
-
-                const data = await response.json();
-
-                console.log(data);
-
-                setForms(data);
-            } catch (err) {
-                setError('Error fetching forms. Please try again later.');
-                console.error('Error fetching forms:', err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchForms();
+        getForms();
     }, []);
 
     // Derive formMsg from the current state
-    const formMsg = isLoading ? 'Loading...' : 
-                    error ? error :
+    const formMsg = !formCollectionIsLoaded ? 'Loading...' : 
+                    formCollectionError ? formCollectionError :
                     forms.length === 0 ? 'No forms found. Create your first form!' : 
                     null;
 
@@ -195,7 +178,7 @@ const UserForms: React.FC = () => {
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
                 </div>
                 {formMsg && <p className="text-center text-gray-400">{formMsg}</p>}
-                {!isLoading && !error && forms.length > 0 && (
+                {formCollectionIsLoaded && !formCollectionError && forms.length > 0 && (
                     <div className="overflow-hidden bg-transparent shadow-lg rounded-lg">
                         <table className="w-full border-separate border-spacing-y-2">
                             <TableHeader />
@@ -208,4 +191,4 @@ const UserForms: React.FC = () => {
     );
 };
 
-export default UserForms;
+export default MyForms;
