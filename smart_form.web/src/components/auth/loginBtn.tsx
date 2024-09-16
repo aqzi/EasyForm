@@ -6,7 +6,7 @@ import Link from 'next/link';
 const LoginBtn = async (props: { isDarkMode: boolean }) => {
     const session = await auth()
 
-    if (session) {
+    if (session?.user) {
         return (
             <Link 
                 href={`/${session.user?.name?.replace(/\s+/g, "")}`}

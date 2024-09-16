@@ -9,6 +9,8 @@ import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { getFormWithResponse } from '@/services/formService';
+import { useQuery } from '@tanstack/react-query';
 
 const ViewForm: React.FC = () => {
     const { setTitle, setSortableItems } = useFormEditorStore((state) => ({
@@ -27,28 +29,19 @@ const ViewForm: React.FC = () => {
     const searchParams = useSearchParams();
     const formId = searchParams.get('formId');
 
+    if (!formId) return null;
+
+    const { isPending, error, data } = useQuery({
+        queryKey: ['formResponse', formId],
+        queryFn: () => getFormWithResponse(formId),
+    })
+
     useEffect(() => {
-        const fetchForm = async () => {
-            if (formId) {
-                try {
-                    const response = await fetch(`/api/viewForm?id=${formId}`);
-
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch form');
-                    }
-
-                    const data = await response.json();
-
-                    setTitle(data.title)
-                    setSortableItems(data.fields)
-                } catch (error) {
-                    console.error('Error fetching form:', error);
-                }
-            }
-        };
-
-        fetchForm();
-    }, [formId]);
+        if(!isPending && !error && data) {
+            setTitle(data.title)
+            setSortableItems(data.fields)
+        }
+    }, [isPending, error]);
 
     return (
         <Skeleton options={['createForm', 'myForms', 'settings']}>

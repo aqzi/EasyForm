@@ -9,6 +9,8 @@ import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { editForm, getFormWithoutResponse } from '@/services/formService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const EditForm: React.FC = () => {
     const { title, sortableItems, addSortableItem, setTitle, setSortableItems } = useFormEditorStore((state) => ({
@@ -21,6 +23,7 @@ const EditForm: React.FC = () => {
 
     const router = useRouter();
     const session = useSession();
+    const queryClient = useQueryClient();
 
     if (!session.data?.user) {
         router.push(`/register`);
@@ -30,61 +33,44 @@ const EditForm: React.FC = () => {
     const searchParams = useSearchParams();
     const formId = searchParams.get('formId');
 
+    if (!formId) return null;
+
+    const { isPending, error, data } = useQuery({
+        queryKey: ['form', formId],
+        queryFn: () => getFormWithoutResponse(formId),
+    })
+
+    const mutation = useMutation({
+        mutationFn: editForm,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['form', formId]});
+            router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`)
+        },
+        onError: (error) => {
+            console.error('Error updating form:', error);
+        },
+    });
+
     useEffect(() => {
-        const fetchForm = async () => {
-            if (formId) {
-                try {
-                    const response = await fetch(`/api/editForm?id=${formId}`);
-
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch form');
-                    }
-
-                    const data = await response.json();
-                    
-                    setTitle(data.title)
-                    setSortableItems(data.fields)
-                } catch (error) {
-                    console.error('Error fetching form:', error);
-                }
-            }
-        };
-
-        fetchForm();
-    }, [formId]);
+        if(!isPending && !error && data) {
+            setTitle(data.title)
+            setSortableItems(data.fields)
+        }
+    }, [isPending, error]);
 
     const updateForm = async () => {
-        try {
-            const formData = {
-                id: formId,
-                title,
-                fields: sortableItems.map((s, index) => ({
-                    id: s.id,
-                    question: s.question,
-                    responseType: s.responseType,
-                    placeholder: s.placeholder,
-                    config: s.config,
-                    sequenceNumber: index + 1
-                }))
-            };
-
-            const response = await fetch('/api/editForm', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save form');
-            }
-
-            const result = await response.json();
-            console.log('Form saved successfully:', result);
-        } catch (error) {
-            console.error('Error saving form:', error);
-        }
+        mutation.mutate({
+            id: formId,
+            title,
+            fields: sortableItems.map((s, index) => ({
+                id: s.id,
+                question: s.question,
+                responseType: s.responseType,
+                placeholder: s.placeholder,
+                config: s.config,
+                sequenceNumber: index + 1
+            }))
+        })
     };
 
     const handleAddQuestion = () => {

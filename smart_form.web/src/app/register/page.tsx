@@ -45,22 +45,22 @@ const Register = () => {
                 >
                     Continue with Google
                 </button>
-                <button 
-                    name='provider'
-                    type='submit' 
-                    value='microsoft'
-                    className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                <div 
+                    // name='provider'
+                    // type='submit' 
+                    // value='microsoft'
+                    className="w-full flex items-center justify-center px-4 py-2 bg-gray-500 border border-gray-700 text-white hover:bg-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                 >
-                    Continue with Microsoft
-                </button>
-                <button 
-                    name='provider'
-                    type='submit' 
-                    value='facebook'
-                    className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    Continue with Microsoft (coming soon)
+                </div>
+                <div 
+                    // name='provider'
+                    // type='submit' 
+                    // value='facebook'
+                    className="w-full flex items-center justify-center px-4 py-2 bg-gray-500 border border-gray-700 text-white hover:bg-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                 >
-                    Continue with Facebook
-                </button>
+                    Continue with Facebook (coming soon)
+                </div>
             </form>
         </div>
     </div>

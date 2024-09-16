@@ -7,18 +7,9 @@ import { Edit, Eye, EyeOff, Share2, Copy } from 'lucide-react';
 import SharePopup from '@/components/sharePopup';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import useFormCollectionStore from '@/store/formCollection';
-
-interface Form
-{
-    formId: string;
-    title: string;
-    createdAt: string;
-    responses: {
-        responseId: string;
-        submittedAt: string;
-    }[];
-}
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Form, fetchForms, getFormWithResponse } from '@/services/formService';
+import useFormEditorStore from '@/store/formEditor';
 
 const TableHeader: React.FC = () => (
     <thead className="bg-[#3b3b3b]">
@@ -37,12 +28,24 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [shareFormId, setShareFormId] = useState<string | null>(null);
 
+    const queryClient = useQueryClient();
+
     const handleShare = (formId: string) => {
         setShareFormId(formId);
     };
 
-    const toggleExpand = (formId: string) => {
+    const toggleExpand = async (formId: string, formResponses: {responseId: string, submittedAt: string}[]) => {
         setExpandedFormId(prevId => prevId === formId ? null : formId);
+
+        // Prefetch form responses to optimize the user experience
+        await Promise.all(
+            formResponses.map(({ responseId }) =>
+                queryClient.prefetchQuery({
+                    queryKey: ['formResponse', responseId],
+                    queryFn: () => getFormWithResponse(responseId),
+                })
+            )
+        );
     };
 
     return (
@@ -69,7 +72,7 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                     {copiedId === form.formId ? <Copy size={18} /> : <Share2 size={18} />}
                                 </button>
                                 <button 
-                                    onClick={() => toggleExpand(form.formId)}
+                                    onClick={() => toggleExpand(form.formId, form.responses)}
                                     className="text-purple-400 hover:text-purple-300 transition-colors duration-200"
                                     title={expandedFormId === form.formId ? 'Hide Responses' : 'Show Responses'}
                                 >
@@ -148,22 +151,24 @@ const MyForms: React.FC = () => {
         router.push(`/register`);
         return null;
     }
-
-    const { forms, formCollectionIsLoaded, formCollectionError, getForms } = useFormCollectionStore((state) => ({
-        forms: state.forms,
-        formCollectionIsLoaded: state.formCollectionIsLoaded,
-        formCollectionError: state.formCollectionError,
-        getForms: state.getForms,
+    
+    const { resetForm } = useFormEditorStore((state) => ({
+        resetForm: state.resetForm
     }))
 
+    const { isPending, error, data } = useQuery({
+        queryKey: ['forms'],
+        queryFn: fetchForms
+    });
+
     useEffect(() => {
-        getForms();
-    }, []);
+        resetForm();
+    }, [])
 
     // Derive formMsg from the current state
-    const formMsg = !formCollectionIsLoaded ? 'Loading...' : 
-                    formCollectionError ? formCollectionError :
-                    forms.length === 0 ? 'No forms found. Create your first form!' : 
+    const formMsg = isPending ? 'Loading...' : 
+                    error ? error.message :
+                    data.length === 0 ? 'No forms found. Create your first form!' : 
                     null;
 
     return (
@@ -178,11 +183,11 @@ const MyForms: React.FC = () => {
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
                 </div>
                 {formMsg && <p className="text-center text-gray-400">{formMsg}</p>}
-                {formCollectionIsLoaded && !formCollectionError && forms.length > 0 && (
+                {!isPending && !error && data.length > 0 && (
                     <div className="overflow-hidden bg-transparent shadow-lg rounded-lg">
                         <table className="w-full border-separate border-spacing-y-2">
                             <TableHeader />
-                            <TableBody forms={forms} />
+                            <TableBody forms={data} />
                         </table>
                     </div>
                 )}

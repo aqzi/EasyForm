@@ -13,6 +13,7 @@ export interface sortableItem {
 interface FormEditorState {
     title: string,
     sortableItems: sortableItem[],
+    formCreatedBeforeLogin: boolean,
     setTitle: (title: string) => void,
     setSortableItems: (questions: sortableItem[]) => void,
     addSortableItem: (question?: sortableItem) => void, //if question is undefined, add a default question
@@ -22,11 +23,13 @@ interface FormEditorState {
     setResponse: (id: number, newResponse: string) => void,
     setPlaceholder: (id: number, newPlaceholder?: string) => void,
     resetForm: () => void,
+    setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => void,
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
     title: '',
     sortableItems: [{ id: 1, question: '', responseType: 'text', response: '' }],
+    formCreatedBeforeLogin: false,
     setTitle: (title: string) => set({ title: title }),
     setSortableItems: (sortableItems: sortableItem[]) => set({ sortableItems: sortableItems }),
     addSortableItem: (question?: sortableItem) => set((state) => {
@@ -72,7 +75,8 @@ const useFormEditorStore = create<FormEditorState>()((set) => ({
             sortableItems: [{ id: 1, question: '', responseType: 'text', response: '' }],
             title: '',
         })
-    }
+    },
+    setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => set({ formCreatedBeforeLogin: formCreatedBeforeLogin })
 }))
 
 export default useFormEditorStore

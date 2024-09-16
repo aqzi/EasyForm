@@ -9,19 +9,34 @@ import FormRender from '@/components/formEditor/formRender';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addForm } from '@/services/formService';
 
 const CreateForm = () => {
     const [alertMessage, setAlertMessage] = useState<string>();
+    const queryClient = useQueryClient();
 
     const session = useSession()
     const router = useRouter();
 
-    const { title, sortableItems, addSortableItem, resetForm } = useFormEditorStore((state) => ({
+    const { title, sortableItems, addSortableItem, resetForm, setFormCreatedBeforeLogin } = useFormEditorStore((state) => ({
         title: state.title,
         sortableItems: state.sortableItems,
         addSortableItem: state.addSortableItem,
-        resetForm: state.resetForm
+        resetForm: state.resetForm,
+        setFormCreatedBeforeLogin: state.setFormCreatedBeforeLogin,
     }))
+
+    const mutation = useMutation({
+        mutationFn: addForm,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['forms']});
+            router.push(`/${session?.data?.user?.name?.replace(/\s+/g, "")}/myForms`)
+        },
+        onError: (error) => {
+            console.error('Error adding form:', error);
+        },
+    });
 
     useEffect(() => {
         resetForm();
@@ -37,39 +52,24 @@ const CreateForm = () => {
         }
 
         if (!session.data?.user?.name) {
+            //set data in local storage to be used after login
+            localStorage.setItem('title', title);
+            localStorage.setItem('sortableItems', JSON.stringify(sortableItems));
+
             router.push('/register');
             return;
         }
 
-        try {
-            const formData = {
-                title,
-                fields: sortableItems.map((s, index) => ({
-                    question: s.question,
-                    responseType: s.responseType,
-                    placeholder: s.placeholder,
-                    config: s.config,
-                    sequenceNumber: index + 1
-                }))
-            };
-
-            const response = await fetch('/api/createForm', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save form');
-            }
-
-            const result = await response.json();
-            console.log('Form saved successfully:', result);
-        } catch (error) {
-            console.error('Error saving form:', error);
-        }
+        mutation.mutate({
+            title,
+            fields: sortableItems.map((s, index) => ({
+                question: s.question,
+                responseType: s.responseType,
+                placeholder: s.placeholder,
+                config: s.config,
+                sequenceNumber: index + 1
+            }))
+        })
     };
 
     function validateSubmission() {
