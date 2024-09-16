@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, List, Settings, FileText } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { List, Settings, FileText } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
 import Link from 'next/link'
+import './hamburgerMenu.css';
 
 
 export type DropdownOption = 'myForms' | 'createForm' | 'settings';
@@ -15,7 +15,6 @@ interface FormOptionsDropdownProps {
 const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
     const session = useSession();
 
     const { resetForm } = useFormEditorStore((state) => ({
@@ -52,10 +51,16 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
                 className="text-gray-400 hover:text-gray-200 transition-colors duration-200 p-2"
                 title="More options"
             >
-                <Menu size={60} strokeWidth={1} className='text-[#8f9bd4]'/>
+                <div className="three col">
+                    <div className={`hamburger ${isOpen ? 'is-active' : ''}`}  id="hamburger-2">
+                        <span className="line"></span>
+                        <span className="line"></span>
+                        <span className="line"></span>
+                    </div>
+                </div>
             </button>
             <div 
-                className={`absolute right-0 w-56 rounded-lg shadow-lg bg-gray-800 ring-1 ring-gray-700 transition-all duration-200 ease-in-out ${
+                className={`absolute right-0 w-56 rounded-lg shadow-lg bg-[#1e1e1e] ring-1 ring-gray-700 transition-all duration-200 ease-in-out ${
                     isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
                 }`}
             >
