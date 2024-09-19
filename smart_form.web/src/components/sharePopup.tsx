@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Copy, X } from 'lucide-react';
 
@@ -30,12 +30,17 @@ const SharePopup: React.FC<SharePopupProps> = ({ url, onClose }) => {
         };
     }, [onClose]);
 
+    function handleMouseClose(e: MouseEvent<HTMLButtonElement>) {
+        e.stopPropagation();
+        onClose();
+    }
+
     return createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold">Share Form</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-white">
+                    <button onClick={(e) => handleMouseClose(e)} className="text-gray-400 hover:text-white">
                         <X size={24} />
                     </button>
                 </div>

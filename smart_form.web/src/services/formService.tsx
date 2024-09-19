@@ -16,3 +16,4 @@ export const getFormWithResponse = (formId: string): Promise<any> => axios.get(`
 export const addForm = (data: any): Promise<void> => axios.post('/api/createForm', data).then((response) => response.data)
 export const getFormWithoutResponse = (formId: string): Promise<any> => axios.get(`/api/editForm?id=${formId}`).then((response) => response.data)
 export const editForm = (data: any): Promise<void> => axios.put('/api/editForm', data).then((response) => response.data)
+export const deleteForm = (formId: string): Promise<void> => axios.delete(`/api/formOverview?id=${formId}`).then((response) => response.data)

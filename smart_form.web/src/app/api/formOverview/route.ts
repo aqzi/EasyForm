@@ -40,3 +40,28 @@ export const GET = auth(async function GET(req) {
         await prisma.$disconnect();
     }
 })
+
+export const DELETE = auth(async function DELETE(req) {
+    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+
+    const formId = req.nextUrl.searchParams.get('id')
+
+    try {
+        if (!formId) {
+            return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+        }
+
+        await prisma.form.delete({
+            where: {
+                id: formId
+            }
+        })
+
+        return NextResponse.json({ message: 'Form deleted successfully' }, { status: 200 });
+    } catch (error) {
+        console.error('Error deleting form:', error);
+        return NextResponse.json({ error: 'Error deleting form' }, { status: 500 });
+    } finally {
+        await prisma.$disconnect();
+    }
+})

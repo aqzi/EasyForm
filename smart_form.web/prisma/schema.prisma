@@ -37,7 +37,7 @@ model FormCreator {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  form      Form     @relation(fields: [formId], references: [id])
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId    String
 
   @@unique([userId, formId])
@@ -50,14 +50,14 @@ model Field {
   placeholder String?
   config Json?
   sequenceNumber Int @default(1)
-  form  Form    @relation(fields: [formId], references: [id])
+  form  Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String
   fieldResponses FieldResponse[]
 }
 
 model FormResponse {
   id String @id @default(uuid())
-  form Form @relation(fields: [formId], references: [id])
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId String
   fieldResponses FieldResponse[]
   submitted_at DateTime @default(now())
@@ -66,9 +66,9 @@ model FormResponse {
 
 model FieldResponse {
   id Int @id @default(autoincrement())
-  formResponse FormResponse @relation(fields: [formResponseId], references: [id])
+  formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
   formResponseId String
-  field Field @relation(fields: [fieldId], references: [id])
+  field Field @relation(fields: [fieldId], references: [id], onDelete: Cascade)
   fieldId Int
   response String
 
@@ -79,7 +79,7 @@ model FormResponder {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  formResponse FormResponse @relation(fields: [formResponseId], references: [id])
+  formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
   formResponseId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
