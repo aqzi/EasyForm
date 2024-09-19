@@ -51,12 +51,10 @@ const MyForms: React.FC = () => {
                 </div>
                 {formMsg && <p className="text-center text-gray-400">{formMsg}</p>}
                 {!isPending && !error && data.length > 0 && (
-                    <div className="overflow-hidden bg-transparent shadow-lg rounded-lg">
-                        <table className="w-full border-separate border-spacing-y-2">
-                            <TableHeader />
-                            <TableBody forms={data} />
-                        </table>
-                    </div>
+                    <table className="w-full shadow-lg rounded-lg">
+                        <TableHeader />
+                        <TableBody forms={data} />
+                    </table>
                 )}
             </div>
         </Skeleton>

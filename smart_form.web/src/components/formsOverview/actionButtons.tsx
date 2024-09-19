@@ -1,15 +1,17 @@
-import SharePopup from "../sharePopup";
-import { useState, MouseEvent } from "react";
+import SharePopup from "./sharePopup";
+import { useState, useEffect, useRef } from "react";
 import Link from 'next/link'
-import { Copy, Share2, Edit, FileX2 } from 'lucide-react';
+import { Copy, Share2, Edit, FileX2, EllipsisVertical } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteForm } from "@/services/formService";
 
 
-const ActionButtons: React.FC<{formId: string, showEditBtn: boolean}> = ({formId, showEditBtn}) => {
+const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: boolean}> = ({formId, showEditBtn, showMenu}) => {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [shareFormId, setShareFormId] = useState<string | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     const session = useSession();
     const queryClient = useQueryClient();
@@ -24,42 +26,81 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean}> = ({formId
         },
     });
 
-    const shareForm = (event: MouseEvent<HTMLButtonElement>, formId: string) => {
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const shareForm = (event: React.MouseEvent<HTMLButtonElement>, formId: string) => {
         event.stopPropagation();
         setShareFormId(formId);
     };
 
-    const removeForm = (event: MouseEvent<HTMLButtonElement>, formId: string) => {
+    const removeForm = (event: React.MouseEvent<HTMLButtonElement>, formId: string) => {
         event.stopPropagation();
         mutation.mutate(formId);
     }
 
     return (
-        <div className="flex space-x-4">
+        <div 
+            className={`relative ${showMenu ? 'visible' : 'invisible'}`}
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+            ref={menuRef}
+        >
             <button
-                onClick={(e) => shareForm(e, formId)}
-                className="text-green-400 hover:text-green-300 transition-colors duration-200"
-                title={copiedId === formId ? 'Copied!' : 'Share Form'}
+                className="text-gray-400 hover:text-gray-200 transition-colors duration-200 px-2"
+                title="More options"
             >
-                {copiedId === formId ? <Copy size={18} /> : <Share2 size={18} />}
+                <EllipsisVertical size={18} />
             </button>
-            <button
-                onClick={(e) => removeForm(e, formId)}
-                className="text-red-400 hover:text-red-300 transition-colors duration-200"
+            <div 
+                className={`absolute right-0 w-36 rounded-lg shadow-lg bg-[#1e1e1e] ring-1 ring-gray-700 transition-all duration-200 ease-in-out z-20 ${
+                    isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}
             >
-                <FileX2 size={18} />
-            </button>
-            {
-                showEditBtn &&
-                <Link
-                    className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                    title="Edit Form"
-                    onClick={(e) => e.stopPropagation()}
-                    href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`}
-                >
-                    <Edit size={18} />
-                </Link>
-            }
+                <div className="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <button
+                        onClick={(e) => {
+                            shareForm(e, formId)
+                            setIsOpen(false)
+                            e.stopPropagation()
+                        }}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
+                        title={copiedId === formId ? 'Copied!' : 'Share Form'}
+                    >
+                        <Copy size={18} className={`mr-3 text-green-400`} />
+                        <span className="font-medium">Share</span>
+                    </button>
+                    {
+                        showEditBtn &&
+                        <Link
+                            className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
+                            title="Edit Form"
+                            onClick={(e) => e.stopPropagation()}
+                            href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/editForm?formId=${formId}`}
+                        >
+                            <Edit size={18} className={`mr-3 text-blue-400`} />
+                            <span className="font-medium">Edit</span>
+                        </Link>
+                    }
+                    <button
+                        onClick={(e) => removeForm(e, formId)}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
+                    >
+                        <FileX2 size={18} className={`mr-3 text-red-400`} />
+                        <span className="font-medium">Remove</span>
+                    </button>
+                </div>
+            </div>
             {shareFormId && (
                 <SharePopup
                     url={`${window.location.origin}/respondForm?formId=${shareFormId}`}

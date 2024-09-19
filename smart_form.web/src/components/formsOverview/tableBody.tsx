@@ -9,10 +9,12 @@ import ActionButtons from './actionButtons';
 const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     const session = useSession();
     const [expandedFormId, setExpandedFormId] = useState<string | null>(null);
+    const [hoveredItem, setHoveredItem] = useState<number|undefined>(); //number indicates the row that is hovered
+    const [activeItem, setActiveItem] = useState<number|undefined>(); //number indicates the row that is hovered
 
     const queryClient = useQueryClient();
 
-    const toggleExpand = async (formId: string, formResponses: {responseId: string, submittedAt: string}[]) => {
+    const toggleExpand = async (formId: string, formResponses: {responseId: string, submittedAt: string}[], itemIdx: number) => {
         setExpandedFormId(prevId => prevId === formId ? null : formId);
 
         // Prefetch form responses to optimize the user experience
@@ -27,12 +29,14 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     };
 
     return (
-        <tbody className="bg-[#202020] divide-y divide-gray-700">
-            {forms.map((form) => (
+        <tbody className="bg-[#212121] divide-y-2 divide-[#1a1a1a]">
+            {forms.map((form, idx) => (
                 <React.Fragment key={form.formId}>
-                    <tr 
-                        className="hover:bg-gray-700 transition-colors duration-200 cursor-pointer" 
-                        onClick={() => toggleExpand(form.formId, form.responses)}
+                    <tr
+                        className={`hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${expandedFormId === form.formId ? 'bg-[#1a1a1a]' : ''}`}
+                        onMouseEnter={() => setHoveredItem(idx)}
+                        onMouseLeave={() => setHoveredItem(undefined)}
+                        onClick={() => toggleExpand(form.formId, form.responses, idx)}
                     >
                         <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-medium text-gray-200">{form.title}</div>
@@ -44,7 +48,7 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                             <div className="text-sm text-gray-400">{form.responses.length}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <ActionButtons formId={form.formId} showEditBtn={form.responses.length === 0}/>
+                            <ActionButtons formId={form.formId} showEditBtn={form.responses.length === 0} showMenu={idx === hoveredItem}/>
                         </td>
                     </tr>
                     {expandedFormId === form.formId && (
