@@ -39,7 +39,7 @@ export default async function Home() {
             { icon: Smile, title: 'User-Friendly', description: 'Intuitive interface for effortless form design and management.' },
             { icon: Sliders, title: 'Customizable', description: 'Tailor forms to your specific needs with advanced customization options.' },
           ].map((feature, index) => (
-            <div key={index} className={`${isDarkMode ? 'bg-[#1a1a1a] border-[#fff]' : 'bg-white border-[#000]'} p-6 rounded-lg shadow-lg border border-opacity-10`}>
+            <div key={index} className={`${isDarkMode ? 'bg-[#1a1a1a] border-gray-700' : 'bg-white border-[#000]'} p-6 rounded-lg shadow-lg border `}>
               <feature.icon className="h-12 w-12 mb-4 text-blue-600" />
               <h3 className="text-2xl font-semibold mb-3">{feature.title}</h3>
               <p className='text-[#959595]'>{feature.description}</p>
