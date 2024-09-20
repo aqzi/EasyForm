@@ -108,7 +108,7 @@ const CreateForm = () => {
 
     return (
         <div className='h-screen p-4'>
-            <Skeleton options={['myForms', 'settings']} showDropdownMenu={session.data?.user != undefined }>
+            <Skeleton options={session.data?.user != undefined ? ['myForms', 'settings'] : []}>
                 <FormRender formActivity='createOrEdit' />
                 {alertMessage && <CustomAlert message={alertMessage} />}
                 <div className="absolute bottom-8 right-8 flex space-x-4">

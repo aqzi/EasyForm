@@ -30,17 +30,16 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const { responses } = await req.json();
-    const formId = req.nextUrl.searchParams.get('id')
+    const { id, userId, responses } = await req.json();
     
     try {
-        if (!formId) {
+        if (!id) {
             return NextResponse.json({ error: 'Form not found' }, { status: 404 });
         }
 
         const formResponse = await prisma.formResponse.create({
             data: {
-                formId: formId,
+                formId: id,
                 fieldResponses: {
                     create: responses.map((response: { fieldId: number; response: string }) => ({
                         fieldId: response.fieldId,
@@ -53,7 +52,16 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        return NextResponse.json({ formResponse }, { status: 201 });
+        if (userId) {
+            await prisma.formResponder.create({
+                data: {
+                    formResponseId: formResponse.id,
+                    userId
+                },
+            });
+        }
+
+        return NextResponse.json({ message: "Added form response successfully" }, { status: 201 });
     } catch (error) {
         console.error('Error submitting form response:', error);
         return NextResponse.json({ error: 'Error submitting form response' }, { status: 500 });

@@ -54,7 +54,7 @@ const SettingsPage: React.FC = () => {
                                     <div className="mt-6">
                                         <button
                                             onClick={() => signOut({ callbackUrl: '/' })}
-                                            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#2c2c2c] border border-gray-400 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                                            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#2c2c2c] border border-gray-400 rounded-md hover:bg-[#414141] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                                         >
                                             <LogOut size={18} className="mr-2 text-white" />
                                             Sign out

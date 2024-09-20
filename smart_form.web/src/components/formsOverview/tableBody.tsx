@@ -17,15 +17,17 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     const toggleExpand = async (formId: string, formResponses: {responseId: string, submittedAt: string}[], itemIdx: number) => {
         setExpandedFormId(prevId => prevId === formId ? null : formId);
 
-        // Prefetch form responses to optimize the user experience
-        await Promise.all(
-            formResponses.map(({ responseId }) =>
-                queryClient.prefetchQuery({
-                    queryKey: ['formResponse', responseId],
-                    queryFn: () => getFormWithResponse(responseId),
-                })
-            )
-        );
+        // Prefetch form responses when clicking on a row to optimize the user experience
+        if (!expandedFormId) {
+            await Promise.all(
+                formResponses.map(({ responseId }) =>
+                    queryClient.prefetchQuery({
+                        queryKey: ['formResponse', responseId],
+                        queryFn: () => getFormWithResponse(responseId),
+                    })
+                )
+            );
+        }
     };
 
     return (
@@ -73,6 +75,9 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                                                 >
                                                                     {new Date(r.submittedAt).toLocaleDateString()}
                                                                 </Link>
+                                                            </td>
+                                                            <td>
+                                                                <p>{r.responder}</p>
                                                             </td>
                                                         </tr>
                                                     ))}

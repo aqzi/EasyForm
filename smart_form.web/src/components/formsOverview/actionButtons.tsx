@@ -1,7 +1,7 @@
 import SharePopup from "./sharePopup";
 import { useState, useEffect, useRef } from "react";
 import Link from 'next/link'
-import { Copy, Share2, Edit, FileX2, EllipsisVertical } from 'lucide-react';
+import { Copy, MessageCircleMore, Edit, FileX2, EllipsisVertical } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteForm, getFormWithoutResponse } from "@/services/formService";
@@ -28,6 +28,7 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
 
     const shareForm = (event: React.MouseEvent<HTMLButtonElement>, formId: string) => {
         event.stopPropagation();
+        setIsOpen(false);
         setShareFormId(formId);
     };
 
@@ -68,17 +69,21 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
             >
                 <div className="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     <button
-                        onClick={(e) => {
-                            shareForm(e, formId)
-                            setIsOpen(false)
-                            e.stopPropagation()
-                        }}
+                        onClick={(e) => shareForm(e, formId)}
                         className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
                         title={copiedId === formId ? 'Copied!' : 'Share Form'}
                     >
                         <Copy size={18} className={`mr-3 text-green-400`} />
                         <span className="font-medium">Share</span>
                     </button>
+                    <Link
+                        onClick={(e) => e.stopPropagation()}
+                        href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/respondForm?formId=${formId}`}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition-colors duration-150"
+                    >
+                        <MessageCircleMore size={18} className={`mr-3 text-orange-400`} />
+                        <span className="font-medium">Respond</span>
+                    </Link>
                     {
                         showEditBtn &&
                         <Link
@@ -102,7 +107,7 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
             </div>
             {shareFormId && (
                 <SharePopup
-                    url={`${window.location.origin}/respondForm?formId=${shareFormId}`}
+                    url={`${window.location.origin}/respondFormWithPublicLink?formId=${shareFormId}`}
                     onClose={() => setShareFormId(null)}
                 />
             )}

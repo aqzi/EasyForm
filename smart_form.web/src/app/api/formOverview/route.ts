@@ -15,7 +15,15 @@ export const GET = auth(async function GET(req) {
             include: {
                 form: {
                     include: {
-                        formResponses: true
+                        formResponses: {
+                            include: {
+                                formResponder: {
+                                    include: {
+                                        user: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -28,6 +36,7 @@ export const GET = auth(async function GET(req) {
             responses: f.form.formResponses.map((r: any) => ({
                 responseId: r.id,
                 submittedAt: r.submitted_at.toISOString(),
+                responder: r.formResponder !== null ? r.formResponder.user.name : 'Anonymous'
                 //maybe extend with total time taken to fill the form
             }))
         }))

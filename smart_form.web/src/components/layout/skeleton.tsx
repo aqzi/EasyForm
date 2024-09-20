@@ -1,24 +1,16 @@
-import { usePathname } from 'next/navigation';
 import FormOptionsDropdown from '@/components/layout/dropdown';
 import { DropdownOption } from '@/components/layout/dropdown';
 import Link from 'next/link';
 
 interface SkeletonProps {
-    showDropdownMenu?: boolean;
     options: DropdownOption[];
     children: React.ReactNode;
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({ showDropdownMenu, options, children }) => {
-    const pathname = usePathname();
-    
-    let hideDropdownMenu = pathname?.includes('respondForm') ?? false;
-    hideDropdownMenu = hideDropdownMenu || pathname?.split('/')[1] === 'createForm';
-    hideDropdownMenu = showDropdownMenu === undefined ? hideDropdownMenu : !showDropdownMenu;
-
+const Skeleton: React.FC<SkeletonProps> = ({ options, children }) => {
     return (
         <div className="flex relative justify-center h-full bg-[#1e1e1e] p-4 overflow-hidden">
-            {!hideDropdownMenu && (
+            {options.length > 0 && (
                 <div className="absolute top-6 right-6">
                     <FormOptionsDropdown options={options}/>
                 </div>
