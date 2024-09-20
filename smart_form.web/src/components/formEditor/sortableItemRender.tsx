@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
@@ -18,6 +18,8 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
         setResponseType: state.setResponseType,
         setResponse: state.setResponse,
     }))
+
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -29,6 +31,15 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
     const handleMouseLeave = () => {
         setIsExpanded(false);
     };
+
+    useEffect(() => {
+        if (textareaRef.current) {
+          // Reset the height to auto to allow it to shrink on text deletion
+          textareaRef.current.style.height = 'auto';
+          // Set the height based on the scroll height (text content)
+          textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+      }, [item.question]);
 
     return (
         <div 
@@ -49,6 +60,7 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
                         <div className='flex flex-col w-full'>
                             <textarea
                                 value={item.question}
+                                ref={textareaRef}
                                 onChange={(e) => setQuestion(item.id, e.target.value)}
                                 placeholder="Enter your question"
                                 className={`w-full bg-transparent text-gray-200 focus:outline-none resize-none overflow-hidden ${formActivity === 'view' ? 'cursor-default' : ''}`}
