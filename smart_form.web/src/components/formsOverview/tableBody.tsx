@@ -63,23 +63,25 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
                                         :
                                         <>
                                             <h3 className="text-lg font-semibold mb-2">Responses: </h3>
-                                            <table className="w-full border-separate border-spacing-y-2">
+                                            <table className="w-full border-separate border-spacing-y-3">
                                                 <tbody>
-                                                    {form.responses.map(r => (
-                                                        <tr key={r.responseId} className="hover:bg-gray-700 transition-colors duration-200">
-                                                            <td className="whitespace-nowrap h-full w-full text-sm text-gray-400 bg-[#303030] hover:bg-[#454545]">
-                                                                <Link
-                                                                    className='w-full h-full block text-left py-2 px-2'
-                                                                    href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/viewForm?formId=${r.responseId}`}
-                                                                    // prefetch={true}
-                                                                >
-                                                                    {new Date(r.submittedAt).toLocaleDateString()}
-                                                                </Link>
-                                                            </td>
-                                                            <td>
-                                                                <p>{r.responder}</p>
-                                                            </td>
-                                                        </tr>
+                                                    {form.responses.map((r) => (
+                                                    <tr
+                                                        key={r.responseId}
+                                                        className="transition-colors duration-200"
+                                                    >
+                                                        <td className="h-full w-full text-sm text-gray-300 bg-[#303030] hover:bg-[#454545] rounded-lg">
+                                                            <Link
+                                                                className="w-full h-full block text-left py-3 px-4"
+                                                                href={`/${session?.data?.user?.name?.replace(/\s+/g, "")}/viewForm?formId=${r.responseId}`}
+                                                            >
+                                                                {new Date(r.submittedAt).toLocaleDateString()}
+                                                            </Link>
+                                                        </td>
+                                                        <td className="pl-4 text-sm text-gray-300">
+                                                            <p className="py-3 px-4 rounded-lg text-left text-nowrap">{r.responder}</p>
+                                                        </td>
+                                                    </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
