@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Copy, Share2, Edit, FileX2, EllipsisVertical } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteForm } from "@/services/formService";
+import { deleteForm, getFormWithoutResponse } from "@/services/formService";
 
 
 const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: boolean}> = ({formId, showEditBtn, showMenu}) => {
@@ -26,19 +26,6 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
         },
     });
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
     const shareForm = (event: React.MouseEvent<HTMLButtonElement>, formId: string) => {
         event.stopPropagation();
         setShareFormId(formId);
@@ -49,10 +36,22 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
         mutation.mutate(formId);
     }
 
+    const onMenuOpen = async () => {
+        setIsOpen(true);
+
+        if (showEditBtn) {
+            // Prefetch form to optimize the user experience
+            await queryClient.prefetchQuery({
+                queryKey: ['form', formId],
+                queryFn: () => getFormWithoutResponse(formId),
+            })
+        }
+    }
+
     return (
         <div 
             className={`relative ${showMenu ? 'visible' : 'invisible'}`}
-            onMouseEnter={() => setIsOpen(true)}
+            onMouseEnter={onMenuOpen}
             onMouseLeave={() => setIsOpen(false)}
             ref={menuRef}
         >
