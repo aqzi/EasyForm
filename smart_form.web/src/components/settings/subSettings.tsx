@@ -19,8 +19,8 @@ export const SubSettings: React.FC<SubSettingsProps> = ({ isVisible, children })
 );
 
 export const SubSettingItem: React.FC<SubSettingItemProps> = ({ title, children }) => (
-    <div className="bg-gray-50 p-4 rounded-md">
-        <h3 className="text-lg font-medium text-gray-800 mb-2">{title}</h3>
+    <div className="bg-[#2c2c2c] p-4 rounded-md">
+        <h3 className="text-lg font-medium text-white mb-2">{title}</h3>
         {children}
     </div>
 );

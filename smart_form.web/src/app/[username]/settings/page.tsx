@@ -40,10 +40,10 @@ const SettingsPage: React.FC = () => {
                                 <div className="space-y-4">
                                     <SubSettingItem title="Personal Information">
                                         <div className="space-y-2">
-                                            <p className="text-gray-700">
+                                            <p className="text-gray-300">
                                                 <span className="font-semibold">Name:</span> {session?.data?.user?.name || 'Not set'}
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="text-gray-300">
                                                 <span className="font-semibold">Email:</span> {session?.data?.user?.email || 'Not set'}
                                             </p>
                                         </div>
@@ -54,9 +54,9 @@ const SettingsPage: React.FC = () => {
                                     <div className="mt-6">
                                         <button
                                             onClick={() => signOut({ callbackUrl: '/' })}
-                                            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                                            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#2c2c2c] border border-gray-400 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                                         >
-                                            <LogOut size={18} className="mr-2 text-gray-500" />
+                                            <LogOut size={18} className="mr-2 text-white" />
                                             Sign out
                                         </button>
                                     </div>
