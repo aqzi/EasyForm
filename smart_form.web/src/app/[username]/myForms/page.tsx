@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import Skeleton from '@/components/layout/skeleton';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchForms, getFormWithResponse } from '@/services/formService';
+import { useQuery } from '@tanstack/react-query'
+import { getForms } from '@/services/formService';
 import useFormEditorStore from '@/store/formEditor';
 import TableHeader from '@/components/formsOverview/tableHeader';
 import TableBody from '@/components/formsOverview/tableBody';
@@ -25,7 +25,7 @@ const MyForms: React.FC = () => {
 
     const { isPending, error, data } = useQuery({
         queryKey: ['forms'],
-        queryFn: fetchForms
+        queryFn: getForms
     });
 
     useEffect(() => {

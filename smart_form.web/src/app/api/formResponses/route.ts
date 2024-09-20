@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
@@ -45,3 +45,44 @@ export const GET = auth(async function GET(req) {
         await prisma.$disconnect();
     }
 })
+
+export async function POST(req: NextRequest) {
+    const { id, userId, responses } = await req.json();
+    
+    try {
+        if (!id) {
+            return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+        }
+
+        const formResponse = await prisma.formResponse.create({
+            data: {
+                formId: id,
+                fieldResponses: {
+                    create: responses.map((response: { fieldId: number; response: string }) => ({
+                        fieldId: response.fieldId,
+                        response: response.response
+                    }))
+                }
+            },
+            include: {
+                fieldResponses: true,
+            }
+        });
+
+        if (userId) {
+            await prisma.formResponder.create({
+                data: {
+                    formResponseId: formResponse.id,
+                    userId
+                },
+            });
+        }
+
+        return NextResponse.json({ message: "Added form response successfully" }, { status: 201 });
+    } catch (error) {
+        console.error('Error submitting form response:', error);
+        return NextResponse.json({ error: 'Error submitting form response' }, { status: 500 });
+    } finally {
+        await prisma.$disconnect();
+    }
+}

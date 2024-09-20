@@ -9,7 +9,7 @@ import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { getFormWithResponse } from '@/services/formService';
+import { getFormResponse } from '@/services/formService';
 import { useQuery } from '@tanstack/react-query';
 
 const ViewForm: React.FC = () => {
@@ -33,7 +33,7 @@ const ViewForm: React.FC = () => {
 
     const { isPending, error, data } = useQuery({
         queryKey: ['formResponse', formId],
-        queryFn: () => getFormWithResponse(formId),
+        queryFn: () => getFormResponse(formId),
     })
 
     useEffect(() => {

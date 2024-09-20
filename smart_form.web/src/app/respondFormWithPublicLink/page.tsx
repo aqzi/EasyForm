@@ -7,7 +7,7 @@ import useFormEditorStore from '@/store/formEditor';
 import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFormToReply, replyForm } from '@/services/formService';
+import { getForm, respondForm } from '@/services/formService';
 import { useSession } from 'next-auth/react';
 
 const RespondFormWithPublicLink = () => {
@@ -31,11 +31,11 @@ const RespondFormWithPublicLink = () => {
 
     const { isPending, error, data } = useQuery({
         queryKey: ['form', formId],
-        queryFn: () => getFormToReply(formId),
+        queryFn: () => getForm(formId),
     })
 
     const mutation = useMutation({
-        mutationFn: replyForm,
+        mutationFn: respondForm,
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['formResponse']});
             setSavedSuccessfully(true);

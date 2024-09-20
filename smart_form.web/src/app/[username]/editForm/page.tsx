@@ -9,7 +9,7 @@ import FormRender from '@/components/formEditor/formRender';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { editForm, getFormWithoutResponse } from '@/services/formService';
+import { editForm, getForm } from '@/services/formService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const EditForm: React.FC = () => {
@@ -37,7 +37,7 @@ const EditForm: React.FC = () => {
 
     const { isPending, error, data } = useQuery({
         queryKey: ['form', formId],
-        queryFn: () => getFormWithoutResponse(formId),
+        queryFn: () => getForm(formId),
     })
 
     const mutation = useMutation({

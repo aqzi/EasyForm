@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Copy, MessageCircleMore, Edit, FileX2, EllipsisVertical } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteForm, getFormWithoutResponse } from "@/services/formService";
+import { deleteForm, getForm } from "@/services/formService";
 
 
 const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: boolean}> = ({formId, showEditBtn, showMenu}) => {
@@ -43,7 +43,7 @@ const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: b
         // Prefetch form to optimize the user experience
         await queryClient.prefetchQuery({
             queryKey: ['form', formId],
-            queryFn: () => getFormWithoutResponse(formId),
+            queryFn: () => getForm(formId),
         })
     }
 
