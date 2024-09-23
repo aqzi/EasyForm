@@ -9,7 +9,7 @@ export const POST = async function POST(req: NextRequest) {
 
     try {
         await sendgrid.send({
-            to: 'aquila.ziedins@hotmail.com', // Your email where you'll receive emails
+            to: 'aquila.ziedins@gmail.com', // Your email where you'll receive emails
             from: 'aquila@ziecon.com', // your website email address here
             subject: `[Lead from website] : ${subject}`,
             html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
