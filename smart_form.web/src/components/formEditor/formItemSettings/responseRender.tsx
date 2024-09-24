@@ -1,8 +1,7 @@
 import TextResponse from './text/response';
 import YesOrNoResponse from './yesOrNo/response';
-import { formActivity } from '../formRender';
 import MultipleChoiceResponse from './multipleChoice/response';
-import { sortableItem } from '../protocol';
+import { sortableItem, formActivity } from '../protocol';
 
 export const responseRender = ({ responseItem, formActivity }: { 
     responseItem: sortableItem,

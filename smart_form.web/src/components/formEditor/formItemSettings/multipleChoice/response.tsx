@@ -1,7 +1,6 @@
 import React from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem } from '../../protocol';
-import { formActivity } from '../../formRender';
+import { sortableItem, formActivity } from '../../protocol';
 
 const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({

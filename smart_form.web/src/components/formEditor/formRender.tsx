@@ -7,8 +7,7 @@ import SortableItemRender from '@/components/formEditor/sortableItemRender';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useSearchParams } from 'next/navigation';
 import useFormEditorStore from '@/store/formEditor';
-
-export type formActivity = 'createOrEdit' | 'view' | 'reply'
+import { formActivity } from './protocol';
 
 const FormRender = ({formActivity}: {formActivity: formActivity}) => {
     const containerRef = useRef<HTMLDivElement>(null)

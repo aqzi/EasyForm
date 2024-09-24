@@ -4,9 +4,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { responseRender } from './formItemSettings/responseRender';
 import useFormEditorStore from '@/store/formEditor';
-import { formActivity } from './formRender';
 import { configRender } from './formItemSettings/configRender';
-import { responseLabels, sortableItem } from './protocol';
+import { responseLabels, sortableItem, formActivity } from './protocol';
 
 const SortableItemRender = ({ item, seqNumber, formActivity }: { 
     item: sortableItem,

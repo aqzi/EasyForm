@@ -3,9 +3,10 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import useFormEditorStore, { sortableItem } from '@/store/formEditor'
+import useFormEditorStore from '@/store/formEditor'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addForm } from '@/services/formService'
+import { sortableItem } from '@/components/formEditor/protocol'
 
 //After the login, the user is redirected to this page and once the session is loaded, 
 //the user is redirected another time to the myForms page which is a protected uri and can only be accessed by authenticated users.

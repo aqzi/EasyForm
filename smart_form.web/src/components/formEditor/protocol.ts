@@ -1,3 +1,14 @@
+export type formActivity = 'createOrEdit' | 'view' | 'reply'
+
+export interface sortableItem {
+    id: number;
+    question: string;
+    responseType: responseTypes;
+    response: string;
+    placeholder?: string;
+    config?: string;
+}
+
 export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo' ;
 
 export const responseLabels = [
@@ -9,12 +20,3 @@ export const responseLabels = [
     { value: 'file', label: 'File' },
     { value: 'date', label: 'Date' },
 ];
-
-export interface sortableItem {
-    id: number;
-    question: string;
-    responseType: responseTypes;
-    response: string;
-    placeholder?: string;
-    config?: string;
-}

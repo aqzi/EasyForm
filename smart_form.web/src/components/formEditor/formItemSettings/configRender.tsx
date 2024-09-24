@@ -1,5 +1,4 @@
-import { sortableItem } from '../protocol';
-import { formActivity } from '../formRender';
+import { sortableItem, formActivity } from '../protocol';
 import TextConfig from './text/config';
 
 export const configRender = ({ responseItem, formActivity }: { 
