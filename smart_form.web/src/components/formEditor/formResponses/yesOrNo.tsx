@@ -28,7 +28,7 @@ const YesOrNoResponse = ({ responseItem, formActivity }: { responseItem: sortabl
     };
 
     return (
-        <div className="flex space-x-3 mt-3">
+        <div className="flex space-x-3 mt-3 ml-1">
             {['Yes', 'No'].map((option) => (
                 <button
                     key={option}

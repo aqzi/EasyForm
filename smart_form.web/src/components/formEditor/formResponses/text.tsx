@@ -25,6 +25,15 @@ const TextResponse = ({ responseItem, formActivity }: { responseItem: sortableIt
         }
     };
 
+    function stringToObject(str?: string): any {
+        try {
+            if (!str) return null;
+            return JSON.parse(str);
+        } catch (e) {
+            return null;
+        }
+    }
+
     return (
         <div className="text-response relative w-full text-white text-sm mt-2">
             <textarea
@@ -39,7 +48,7 @@ const TextResponse = ({ responseItem, formActivity }: { responseItem: sortableIt
                 `}
                 style={{ width: '100%' }}
                 rows={1}
-                placeholder={responseItem.placeholder || 'Type your response here...'}
+                placeholder={stringToObject(responseItem.config)?.placeholder || 'Type your response here...'}
                 readOnly={formActivity === 'view'}
             />
         </div>

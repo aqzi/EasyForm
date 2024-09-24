@@ -6,6 +6,7 @@ import { responseTypes, responseRender, responseLabels } from './responseRender'
 import useFormEditorStore from '@/store/formEditor';
 import { sortableItem } from '@/store/formEditor';
 import { formActivity } from './formRender';
+import { configRender } from './configRender';
 
 const SortableItemRender = ({ item, seqNumber, formActivity }: { 
     item: sortableItem,
@@ -13,6 +14,7 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
     formActivity: formActivity
 }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
+    const [activeTab, setActiveTab] = useState<'response' | 'config'>('response');
     const { setQuestion, setResponseType, setResponse } = useFormEditorStore((state) => ({
         setQuestion: state.setQuestion,
         setResponseType: state.setResponseType,
@@ -102,23 +104,55 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
             )}
 
             {isExpanded && (
-                <div className="mt-4 bg-[#2f2f2f] rounded-md p-4 mb-1 border border-gray-700">
-                    <h3 className="text-gray-200 font-medium mb-2">Select Response Type</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                        {responseLabels.map((type) => (
-                            <button
+                <div className="mt-4 rounded-md p-4 mb-1 border border-gray-700">
+                    <div className="flex space-x-4 mb-4 border-b border-[#858585]">
+                        <button
+                            onClick={() => setActiveTab('response')}
+                            className={`px-4 py-1 rounded-t-lg border-t border-x ${
+                            activeTab === 'response'
+                                ? 'border-[#858585] bg-[#282828] text-white font-medium shadow-md'
+                                : 'border-transparent bg-[#282828] text-gray-300 hover:bg-[#353535] hover:text-white'
+                            } transition-colors duration-300`}
+                        >
+                            Response
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('config')}
+                            className={`px-4 py-1 rounded-t-lg border-t border-x ${
+                            activeTab === 'config'
+                                ? 'border-[#858585] bg-[#282828] text-white font-medium shadow-md'
+                                : 'border-transparent bg-[#282828] text-gray-300 hover:bg-[#353535] hover:text-white'
+                            } transition-colors duration-300`}
+                        >
+                            Config
+                        </button>
+                    </div>
+            
+                    {activeTab === 'response' && (
+                        <div>
+                            <div className="grid grid-cols-3 gap-2">
+                            {responseLabels.map((type) => (
+                                <button
                                 key={type.value}
                                 onClick={() => setResponseType(item.id, type.value as any)}
-                                className={`p-2 rounded text-left text-sm ${
-                                    item.responseType === type.value 
-                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium' 
-                                        : 'bg-[#3f3f3f] text-gray-200 hover:bg-[#4f4f4f]'
+                                className={`py-1 px-2 rounded text-left text-sm ${
+                                    item.responseType === type.value
+                                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium'
+                                    : 'bg-[#2c2c2c] text-gray-200 hover:bg-[#4f4f4f]'
                                 }`}
-                            >
+                                >
                                 {type.label}
-                            </button>
-                        ))}
-                    </div>
+                                </button>
+                            ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {activeTab === 'config' && (
+                        <div>
+                            {configRender({ responseItem: item, formActivity: formActivity  })}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

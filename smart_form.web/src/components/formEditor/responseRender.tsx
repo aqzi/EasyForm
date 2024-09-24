@@ -1,7 +1,8 @@
 import { sortableItem } from '@/store/formEditor';
-import TextResponse from './formResponseActions/text';
-import YesOrNoResponse from './formResponseActions/yesOrNo';
+import TextResponse from './formResponses/text';
+import YesOrNoResponse from './formResponses/yesOrNo';
 import { formActivity } from './formRender';
+import MultipleChoiceResponse from './formResponses/multipleChoice';
 
 export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo' ;
 
@@ -30,6 +31,13 @@ export const responseRender = ({ responseItem, formActivity }: {
         case 'yesOrNo':
             return (
                 <YesOrNoResponse
+                    responseItem={responseItem}
+                    formActivity={formActivity}
+                />
+            );
+        case 'multipleChoice':
+            return (
+                <MultipleChoiceResponse
                     responseItem={responseItem}
                     formActivity={formActivity}
                 />

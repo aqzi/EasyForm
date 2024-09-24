@@ -24,6 +24,7 @@ interface FormEditorState {
     setPlaceholder: (id: number, newPlaceholder?: string) => void,
     resetForm: () => void,
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => void,
+    setConfig: (id: number, newConfig: string) => void,
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
@@ -76,7 +77,12 @@ const useFormEditorStore = create<FormEditorState>()((set) => ({
             title: '',
         })
     },
-    setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => set({ formCreatedBeforeLogin: formCreatedBeforeLogin })
+    setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => set({ formCreatedBeforeLogin: formCreatedBeforeLogin }),
+    setConfig: (id: number, newConfig: string) => {
+        set((state) => ({
+            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, config: newConfig } : q)
+        }))
+    }
 }))
 
 export default useFormEditorStore
