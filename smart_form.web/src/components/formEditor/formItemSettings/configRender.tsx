@@ -1,6 +1,6 @@
-import { sortableItem } from '@/store/formEditor';
-import { formActivity } from './formRender';
-import TextConfig from './formConfigs/text';
+import { sortableItem } from '../protocol';
+import { formActivity } from '../formRender';
+import TextConfig from './text/config';
 
 export const configRender = ({ responseItem, formActivity }: { 
     responseItem: sortableItem,

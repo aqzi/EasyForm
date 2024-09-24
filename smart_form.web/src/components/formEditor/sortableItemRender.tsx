@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { responseTypes, responseRender, responseLabels } from './responseRender';
+import { responseRender } from './formItemSettings/responseRender';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem } from '@/store/formEditor';
 import { formActivity } from './formRender';
-import { configRender } from './configRender';
+import { configRender } from './formItemSettings/configRender';
+import { responseLabels, sortableItem } from './protocol';
 
 const SortableItemRender = ({ item, seqNumber, formActivity }: { 
     item: sortableItem,

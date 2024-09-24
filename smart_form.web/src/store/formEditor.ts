@@ -1,14 +1,5 @@
-import { responseTypes } from '@/components/formEditor/responseRender';
+import { responseTypes, sortableItem } from '@/components/formEditor/protocol';
 import { create } from 'zustand'
-
-export interface sortableItem {
-    id: number;
-    question: string;
-    responseType: responseTypes;
-    response: string;
-    placeholder?: string;
-    config?: string;
-}
 
 interface FormEditorState {
     title: string,

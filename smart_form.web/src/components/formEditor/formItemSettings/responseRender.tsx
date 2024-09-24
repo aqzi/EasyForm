@@ -1,20 +1,8 @@
-import { sortableItem } from '@/store/formEditor';
-import TextResponse from './formResponses/text';
-import YesOrNoResponse from './formResponses/yesOrNo';
-import { formActivity } from './formRender';
-import MultipleChoiceResponse from './formResponses/multipleChoice';
-
-export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo' ;
-
-export const responseLabels = [
-    { value: 'text', label: 'Text' },
-    { value: 'yesOrNo', label: 'Yes or No' },
-    { value: 'multipleChoice', label: 'Multiple Choice' },
-    { value: 'checkbox', label: 'Checkbox' },
-    { value: 'image', label: 'Image' },
-    { value: 'file', label: 'File' },
-    { value: 'date', label: 'Date' },
-];
+import TextResponse from './text/response';
+import YesOrNoResponse from './yesOrNo/response';
+import { formActivity } from '../formRender';
+import MultipleChoiceResponse from './multipleChoice/response';
+import { sortableItem } from '../protocol';
 
 export const responseRender = ({ responseItem, formActivity }: { 
     responseItem: sortableItem,

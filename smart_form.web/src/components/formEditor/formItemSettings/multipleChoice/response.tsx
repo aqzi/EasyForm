@@ -1,9 +1,9 @@
 import React from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem } from '@/store/formEditor';
-import { formActivity } from '../formRender';
+import { sortableItem } from '../../protocol';
+import { formActivity } from '../../formRender';
 
-const YesOrNoResponse = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
+const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
         setPlaceholder: state.setPlaceholder,
@@ -29,7 +29,7 @@ const YesOrNoResponse = ({ responseItem, formActivity }: { responseItem: sortabl
 
     return (
         <div className="flex space-x-3 mt-3 ml-1">
-            {['Yes', 'No'].map((option) => (
+            {['Option 1', 'Option 2', 'Option 3'].map((option) => (
                 <button
                     key={option}
                     onClick={() => handleClick(option)}
@@ -48,4 +48,4 @@ const YesOrNoResponse = ({ responseItem, formActivity }: { responseItem: sortabl
     );
 };
 
-export default YesOrNoResponse;
+export default Response;

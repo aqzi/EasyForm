@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem } from '@/store/formEditor';
-import { formActivity } from '../formRender';
+import { sortableItem } from '../../protocol';
+import { formActivity } from '../../formRender';
 
-const TextConfig = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
+const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const [placeholder, setPlaceholder] = useState('');
     
     const { setConfig } = useFormEditorStore((state) => ({
@@ -33,4 +33,4 @@ const TextConfig = ({ responseItem, formActivity }: { responseItem: sortableItem
     );
 };
 
-export default TextConfig;
+export default Config;

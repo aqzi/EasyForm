@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem } from '@/store/formEditor';
-import { formActivity } from '../formRender';
+import { sortableItem } from '../../protocol';
+import { formActivity } from '../../formRender';
 
-const TextResponse = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
+const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
@@ -55,4 +55,4 @@ const TextResponse = ({ responseItem, formActivity }: { responseItem: sortableIt
     );
 };
 
-export default TextResponse;
+export default Response;
