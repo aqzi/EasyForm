@@ -9,14 +9,16 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
     const [hoveredOption, setHoveredOption] = useState<number>(-1); // Track the hovered option by index
     const [hoveredResponse, setHoveredResponse] = useState(false);
 
-    const { setResponse, setConfig } = useFormEditorStore((state) => ({
+    const { setResponse, setConfig, setErrorMessage } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
-        setConfig: state.setConfig
+        setConfig: state.setConfig,
+        setErrorMessage: state.setErrorMessage,
     }));
 
     useEffect(() => {
         if(!responseItem.config) {
             setConfig(responseItem.id, JSON.stringify({ options: ['', '', ''] })); // Update the config dynamically
+            setErrorMessage('Give all the multiple choice options a value.');
         }
     }, [])
 
@@ -32,6 +34,12 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
             const updatedOptions = [...tmp];
             updatedOptions[index] = value;
             setConfig(responseItem.id, objectToJson({ options: updatedOptions }));
+
+            if (updatedOptions.includes('')) {
+                setErrorMessage('Give all the multiple choice options a value.');
+            } else {
+                setErrorMessage(undefined);
+            }
         }
     };
 

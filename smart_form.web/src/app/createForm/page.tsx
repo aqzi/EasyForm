@@ -11,20 +11,22 @@ import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addForm } from '@/services/formService';
+import { error } from 'console';
 
 const CreateForm = () => {
-    const [alertMessage, setAlertMessage] = useState<string>();
+    const [clickedSave, setClickedSave] = useState(false);
     const queryClient = useQueryClient();
 
     const session = useSession()
     const router = useRouter();
 
-    const { title, sortableItems, addSortableItem, resetForm, setFormCreatedBeforeLogin } = useFormEditorStore((state) => ({
+    const { title, sortableItems, errorMessage, addSortableItem, resetForm, setErrorMessage } = useFormEditorStore((state) => ({
         title: state.title,
         sortableItems: state.sortableItems,
+        errorMessage: state.errorMessage,
         addSortableItem: state.addSortableItem,
         resetForm: state.resetForm,
-        setFormCreatedBeforeLogin: state.setFormCreatedBeforeLogin,
+        setErrorMessage: state.setErrorMessage
     }))
 
     const mutation = useMutation({
@@ -47,6 +49,8 @@ const CreateForm = () => {
     }
 
     const handleSave = async () => {
+        setClickedSave(true);
+
         if (!validateSubmission()) {
             return;
         }
@@ -73,14 +77,14 @@ const CreateForm = () => {
     };
 
     function validateSubmission() {
-        let msg = undefined;
+        let msg = errorMessage;
 
         if (title === '') msg = 'Please enter a title for the form.';
         if (sortableItems.length === 0) msg = 'Please add at least one question to the form.';
         if (sortableItems.some((s) => s.question === '')) msg = 'Please enter a question for all fields.';
 
         if (msg) {
-            setAlertMessage(msg);
+            setErrorMessage(msg);
             return false;
         } else {
             return true;
@@ -95,7 +99,10 @@ const CreateForm = () => {
               <p className="mt-4 text-gray-300">{message}</p>
               <div className="mt-6 text-right">
                 <button
-                  onClick={() => setAlertMessage(undefined)}
+                  onClick={() => {
+                    setErrorMessage(undefined)
+                    setClickedSave(false)
+                  }}
                   className="bg-blue-500 w-full text-white px-4 py-1 items-center flex justify-center rounded hover:bg-blue-600 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
                     <Check className="h-4 w-4" />
@@ -110,7 +117,7 @@ const CreateForm = () => {
         <div className='h-screen p-4'>
             <Skeleton options={session.data?.user != undefined ? ['myForms', 'settings'] : []}>
                 <FormRender formActivity='createOrEdit' />
-                {alertMessage && <CustomAlert message={alertMessage} />}
+                {(errorMessage && clickedSave) && <CustomAlert message={errorMessage} />}
                 <div className="absolute bottom-8 right-8 flex space-x-4">
                     <button
                         onClick={handleSave}
