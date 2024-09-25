@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
-import useFormEditorStore from '@/store/formEditor';
 import { sortableItem, formActivity } from '../../protocol';
+import useFormEditorStore from '@/store/formEditor';
 import { jsonToObject, objectToJson } from '../../utils';
 import { protocol } from './protocol';
 
@@ -10,22 +10,14 @@ const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, fo
     }));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setConfig(responseItem.id, objectToJson({ placeholder: e.target.value })); // Update the config dynamically
+        setConfig(responseItem.id, objectToJson({ options: e.target.value })); // Update the config dynamically
     };
 
     return (
         <div className="text-response relative w-full max-w-lg mx-auto bg-[#232323] p-4 rounded-lg shadow-lg">
             <label htmlFor="placeholder-input" className="block text-gray-300 text-md mb-3">
-                Enter Placeholder:
+                There are no configurations available for this response type.
             </label>
-            <input
-                id="placeholder-input"
-                type="text"
-                value={jsonToObject<protocol>(responseItem.config)?.placeholder}
-                onChange={handleInputChange}
-                placeholder="Type something..."
-                className="w-full px-3 py-1 text-sm text-gray-200 bg-transparent border border-gray-600 rounded-lg outline-none transition-colors duration-200 ease-in-out"
-            />
         </div>
     );
 };

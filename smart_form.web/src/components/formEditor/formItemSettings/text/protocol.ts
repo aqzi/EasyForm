@@ -1,1 +1,1 @@
-type protocol = { placeholder: string }
+export type protocol = { placeholder: string }

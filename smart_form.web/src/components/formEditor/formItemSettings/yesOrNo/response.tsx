@@ -3,25 +3,22 @@ import useFormEditorStore from '@/store/formEditor';
 import { sortableItem, formActivity } from '../../protocol';
 
 const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
-    const { setResponse, setPlaceholder } = useFormEditorStore((state) => ({
+    const { setResponse } = useFormEditorStore((state) => ({
         setResponse: state.setResponse,
-        setPlaceholder: state.setPlaceholder,
     }));
 
     const getButtonClasses = (option: string) => {
-        if (formActivity === 'createOrEdit' && responseItem.placeholder === option) {
-            return 'bg-blue-500 text-white shadow-sm'
-        } else if (formActivity !== 'createOrEdit' && responseItem.response === option) {
-            return 'bg-blue-500 text-white shadow-sm'
+        if (formActivity === 'createOrEdit') {
+            return 'bg-transparent hover:bg-transparent'
+        } else if (responseItem.response === option) {
+            return 'bg-blue-500 shadow-sm'
         } else {
-            return 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+            return 'bg-transparent hover:bg-[#2b2b2c]'
         }
     };
 
     const handleClick = (option: string) => {
-        if (formActivity === 'createOrEdit') {
-            setPlaceholder(responseItem.id, (responseItem.placeholder === option) ? undefined : option);
-        } else if (formActivity === 'reply') {
+        if (formActivity === 'reply') {
             setResponse(responseItem.id, option);
         }
     };
@@ -33,11 +30,11 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                     key={option}
                     onClick={() => handleClick(option)}
                     className={`
-                        px-4 rounded-full font-medium text-sm
+                        px-4 rounded-md font-medium text-sm border border-gray-500
                         ${getButtonClasses(option)} // Updated to use the function
-                        border border-transparent
+                         text-white
                         transition-all duration-200 ease-in-out
-                        ${formActivity === 'view' && 'cursor-default'}
+                        ${formActivity !== 'reply' && 'cursor-default'}
                     `}
                 >
                     {option}

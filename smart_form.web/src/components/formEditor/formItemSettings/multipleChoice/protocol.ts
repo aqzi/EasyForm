@@ -1,0 +1,1 @@
+export type protocol = { options: string[] }

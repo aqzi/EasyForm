@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import useFormEditorStore from '@/store/formEditor';
 import { sortableItem, formActivity } from '../../protocol';
 import { jsonToObject, objectToJson } from '../../utils';
+import { protocol } from './protocol'
 
 const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
