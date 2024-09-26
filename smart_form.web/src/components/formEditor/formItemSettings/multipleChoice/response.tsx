@@ -74,7 +74,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                             onChange={(e) => handleInputChange(index, e.target.value)}
                             onMouseEnter={() => setHoveredOption(index)}
                             className={`
-                                px-4 rounded-md font-medium text-sm border border-gray-500
+                                px-4 rounded-md font-medium border border-gray-500
                                 transition-all duration-200 ease-in-out outline-none w-32 bg-transparent
                                 hover:bg-transparent text-white
                             `}
@@ -84,7 +84,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                         <button
                             onClick={() => handleClick(option)}
                             className={`
-                                px-4 rounded-md font-medium text-sm border border-gray-500
+                                px-4 rounded-md font-medium border border-gray-500
                                  text-white
                                 transition-all duration-200 ease-in-out w-32 text-left
                                 ${responseItem.response === option ? 'bg-blue-500 shadow-sm' : 'hover:bg-[#2b2b2c]'}

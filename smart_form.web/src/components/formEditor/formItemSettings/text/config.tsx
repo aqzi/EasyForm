@@ -14,8 +14,8 @@ const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, fo
     };
 
     return (
-        <div className="text-response relative w-full max-w-lg mx-auto bg-[#232323] p-4 rounded-lg shadow-lg">
-            <label htmlFor="placeholder-input" className="block text-gray-300 text-md mb-3">
+        <div className="text-response relative w-full bg-[#232323] p-4 rounded-lg shadow-lg">
+            <label htmlFor="placeholder-input" className="block text-gray-300 text-lg mb-3">
                 Enter Placeholder:
             </label>
             <input
@@ -24,7 +24,7 @@ const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, fo
                 value={jsonToObject<protocol>(responseItem.config)?.placeholder}
                 onChange={handleInputChange}
                 placeholder="Type something..."
-                className="w-full px-3 py-1 text-sm text-gray-200 bg-transparent border border-gray-600 rounded-lg outline-none transition-colors duration-200 ease-in-out"
+                className="w-full px-3 py-1 text-gray-200 bg-transparent border border-gray-600 rounded-lg outline-none transition-colors duration-200 ease-in-out"
             />
         </div>
     );

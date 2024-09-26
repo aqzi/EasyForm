@@ -9,7 +9,7 @@ interface SkeletonProps {
 
 const Skeleton: React.FC<SkeletonProps> = ({ options, children }) => {
     return (
-        <div className="flex relative justify-center h-full bg-[#1e1e1e] p-4 overflow-hidden">
+        <div className="flex relative justify-center h-full w-full bg-[#1e1e1e] p-4 overflow-hidden">
             {options.length > 0 && (
                 <div className="absolute top-6 right-6">
                     <FormOptionsDropdown options={options}/>
@@ -23,7 +23,7 @@ const Skeleton: React.FC<SkeletonProps> = ({ options, children }) => {
                     EasyForm
                 </h1>
             </Link>
-            <div className='h-full mt-20'>
+            <div className='md:p-20 py-20 w-full items-center flex justify-center'>
                 {children}
             </div>
         </div>

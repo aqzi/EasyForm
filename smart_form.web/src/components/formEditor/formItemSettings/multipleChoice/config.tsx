@@ -14,9 +14,9 @@ const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, fo
     };
 
     return (
-        <div className="text-response relative w-full max-w-lg mx-auto bg-[#232323] p-4 rounded-lg shadow-lg">
-            <label htmlFor="placeholder-input" className="block text-gray-300 text-md mb-3">
-                There are no configurations available for this response type.
+        <div className="text-response relative w-full bg-[#232323] p-4 rounded-lg shadow-lg">
+            <label htmlFor="placeholder-input" className="block text-gray-300 text-lg mb-3">
+                No configurations available yet for this response type.
             </label>
         </div>
     );

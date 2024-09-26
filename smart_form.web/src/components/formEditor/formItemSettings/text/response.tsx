@@ -27,7 +27,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
     };
 
     return (
-        <div className="text-response relative w-full text-white text-sm mt-2">
+        <div className="text-response relative w-full text-white mt-2">
             <textarea
                 ref={textareaRef}
                 value={formActivity === 'createOrEdit' ? jsonToObject<protocol>(responseItem.config)?.placeholder : responseItem.response}

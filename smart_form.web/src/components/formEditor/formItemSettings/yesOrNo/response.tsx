@@ -30,7 +30,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                     key={option}
                     onClick={() => handleClick(option)}
                     className={`
-                        px-4 rounded-md font-medium text-sm border border-gray-500
+                        px-4 rounded-md font-medium border border-gray-500
                         ${getButtonClasses(option)} // Updated to use the function
                          text-white
                         transition-all duration-200 ease-in-out

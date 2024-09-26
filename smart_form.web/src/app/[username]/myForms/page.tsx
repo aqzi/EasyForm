@@ -40,7 +40,7 @@ const MyForms: React.FC = () => {
 
     return (
         <Skeleton options={['createForm', 'settings']}>
-            <div className='max-w-3xl mx-auto mt-8 w-[650px]'>
+            <div className='w-full max-w-5xl sm:w-4/5 xl:w-3/5 mt-8 h-full'>
                 <div className="relative mb-12">
                     <h1
                         className="text-4xl font-bold mb-2 text-gray-200 w-full bg-transparent border-none focus:outline-none focus:ring-0 placeholder-gray-500 px-2 py-4 rounded"
