@@ -1,16 +1,5 @@
+import { Form } from '@/components/formEditor/protocol'
 import axios from 'axios'
-
-export interface Form
-{
-    formId: string;
-    title: string;
-    createdAt: string;
-    responses: {
-        responseId: string;
-        submittedAt: string;
-        responder: string;
-    }[];
-}
 
 export const getForms = (): Promise<Form[]> => axios.get('/api/forms').then((response) => response.data)
 export const getForm = (formId: string): Promise<any> => axios.get(`/api/forms?id=${formId}`).then((response) => response.data)

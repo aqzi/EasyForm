@@ -13,11 +13,12 @@ import { editForm, getForm } from '@/services/formService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const EditForm: React.FC = () => {
-    const { title, sortableItems, addSortableItem, setTitle, setSortableItems } = useFormEditorStore((state) => ({
+    const { title, sortableItems, addSortableItem, setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
         title: state.title,
         sortableItems: state.sortableItems,
         addSortableItem: state.addSortableItem,
         setTitle: state.setTitle,
+        setRules: state.setRules,
         setSortableItems: state.setSortableItems,
     }))
 
@@ -54,6 +55,7 @@ const EditForm: React.FC = () => {
     useEffect(() => {
         if(!isPending && !error && data) {
             setTitle(data.title)
+            setRules(data.rules)
             setSortableItems(data.fields)
         }
     }, [isPending, error]);

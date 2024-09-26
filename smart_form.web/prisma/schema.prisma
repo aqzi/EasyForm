@@ -27,6 +27,7 @@ model Form {
   id    String     @id @default(uuid())
   title  String
   fields Field[]
+  rules String?
   formCreators FormCreator[]
   formResponses FormResponse[]
   createdAt DateTime @default(now())

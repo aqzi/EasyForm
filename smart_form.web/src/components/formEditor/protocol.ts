@@ -1,3 +1,15 @@
+export interface Form
+{
+    formId: string;
+    title: string;
+    createdAt: string;
+    responses: {
+        responseId: string;
+        submittedAt: string;
+        responder: string;
+    }[];
+}
+
 export type formActivity = 'createOrEdit' | 'view' | 'reply'
 
 export interface sortableItem {

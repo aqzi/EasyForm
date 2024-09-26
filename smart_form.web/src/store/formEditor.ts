@@ -3,6 +3,7 @@ import { create } from 'zustand'
 
 interface FormEditorState {
     title: string,
+    rules?: string,
     sortableItems: sortableItem[],
     errorMessage?: string,
     formCreatedBeforeLogin: boolean,
@@ -18,6 +19,7 @@ interface FormEditorState {
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => void,
     setConfig: (id: number, newConfig: string) => void,
     setErrorMessage: (errorMessage?: string) => void,
+    setRules: (rules: string) => void,
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
@@ -76,7 +78,8 @@ const useFormEditorStore = create<FormEditorState>()((set) => ({
             sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, config: newConfig } : q)
         }))
     },
-    setErrorMessage: (errorMessage?: string) => set({ errorMessage: errorMessage })
+    setErrorMessage: (errorMessage?: string) => set({ errorMessage: errorMessage }),
+    setRules: (rules: string) => set({ rules: rules }),
 }))
 
 export default useFormEditorStore

@@ -22,10 +22,10 @@ const RespondForm = () => {
 
     if (!formId) return null;
 
-    const { sortableItems, setTitle, setSortableItems } = useFormEditorStore((state) => ({
-        title: state.title,
+    const { sortableItems, setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
         sortableItems: state.sortableItems,
         setTitle: state.setTitle,
+        setRules: state.setRules,
         setSortableItems: state.setSortableItems
     }))
 
@@ -48,6 +48,7 @@ const RespondForm = () => {
     useEffect(() => {
         if(!isPending && !error && data) {
             setTitle(data.title)
+            setRules(data.rules)
             setSortableItems(data.fields)
         }
     }, [isPending, error]);

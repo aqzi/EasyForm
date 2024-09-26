@@ -59,6 +59,7 @@ export const GET = auth(async function GET(req) {
             const formSelection = forms.map((f: any) => ({
                 formId: f.form.id,
                 title: f.form.title,
+                rules: f.form.rules,
                 createdAt: f.form.createdAt.toISOString(),
                 responses: f.form.formResponses.map((r: any) => ({
                     responseId: r.id,
@@ -83,7 +84,7 @@ export const POST = auth(async function POST(req) {
 
     const userId = req.auth.user?.id
 
-    const { title, fields } = await req.json();
+    const { title, rules, fields } = await req.json();
 
     try {
         if (!userId) {
@@ -93,6 +94,7 @@ export const POST = auth(async function POST(req) {
         const form = await prisma.form.create({
             data: {
                 title: title,
+                rules: rules,
                 fields: {
                     create: fields,
                 },
@@ -121,7 +123,7 @@ export const POST = auth(async function POST(req) {
 export const PUT = auth(async function PUT(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
-    const { id, title, fields } = await req.json();
+    const { id, title, rules, fields } = await req.json();
     
     try {
         if (!id) {
@@ -132,6 +134,7 @@ export const PUT = auth(async function PUT(req) {
             where: { id: id },
             data: {
                 title: title,
+                rules: rules,
                 fields: {
                     upsert: fields.map((field: any) => ({
                         where: { id: field.id || 0 }, // Use 0 for new fields

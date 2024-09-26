@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addForm } from '@/services/formService';
-import { error } from 'console';
 
 const CreateForm = () => {
     const [clickedSave, setClickedSave] = useState(false);
@@ -20,8 +19,9 @@ const CreateForm = () => {
     const session = useSession()
     const router = useRouter();
 
-    const { title, sortableItems, errorMessage, addSortableItem, resetForm, setErrorMessage } = useFormEditorStore((state) => ({
+    const { title, rules, sortableItems, errorMessage, addSortableItem, resetForm, setErrorMessage } = useFormEditorStore((state) => ({
         title: state.title,
+        rules: state.rules,
         sortableItems: state.sortableItems,
         errorMessage: state.errorMessage,
         addSortableItem: state.addSortableItem,
@@ -66,6 +66,7 @@ const CreateForm = () => {
 
         mutation.mutate({
             title,
+            rules,
             fields: sortableItems.map((s, index) => ({
                 question: s.question,
                 responseType: s.responseType,
