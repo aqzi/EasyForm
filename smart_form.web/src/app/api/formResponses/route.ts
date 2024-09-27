@@ -31,6 +31,7 @@ export const GET = auth(async function GET(req) {
 
         const data = {
             title: response.form.title,
+            rules: response.form.rules,
             fields: response.fieldResponses.map((fr: any) => ({
                 ...fr.field,
                 response: fr.response

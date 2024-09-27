@@ -13,8 +13,9 @@ import { getFormResponse } from '@/services/formService';
 import { useQuery } from '@tanstack/react-query';
 
 const ViewForm: React.FC = () => {
-    const { setTitle, setSortableItems } = useFormEditorStore((state) => ({
+    const { setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
         setTitle: state.setTitle,
+        setRules: state.setRules,
         setSortableItems: state.setSortableItems,
     }))
 
@@ -39,6 +40,7 @@ const ViewForm: React.FC = () => {
     useEffect(() => {
         if(!isPending && !error && data) {
             setTitle(data.title)
+            setRules(data.rules)
             setSortableItems(data.fields)
         }
     }, [isPending, error]);

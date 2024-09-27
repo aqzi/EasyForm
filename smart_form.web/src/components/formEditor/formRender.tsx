@@ -6,6 +6,7 @@ import { formActivity } from './protocol';
 import Editor from './views/editor';
 import { RulesEditor } from './views/rules';
 import { Playground } from './views/playground';
+import FormValidation from './formValidation';
 
 const FormRender = ({formActivity}: {formActivity: formActivity}) => {
     const [activeTab, setActiveTab] = useState<'Editor' | 'Rules' | 'Playground'>('Editor');
@@ -83,6 +84,7 @@ const FormRender = ({formActivity}: {formActivity: formActivity}) => {
                     {(activeTab === 'Playground' && formActivity === 'createOrEdit') && <Playground/>}
                 </div>
             </div>
+            {formActivity === 'view' && <FormValidation/>}
         </div>
     )
 }
