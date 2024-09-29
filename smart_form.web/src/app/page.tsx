@@ -9,8 +9,10 @@ import AIBrain from '@/components/customSvg/aiBrain'
 import FeedbackForm from '@/components/forms/FeedbackForm'
 
 export default async function Home() {
-    const cookieStore = cookies()
-    const isDarkMode = cookieStore.get('darkMode')?.value === 'true'
+    // const cookieStore = cookies()
+    // const isDarkMode = cookieStore.get('darkMode')?.value === 'true'
+
+    const isDarkMode = true
     const session = await auth()
 
     return (
