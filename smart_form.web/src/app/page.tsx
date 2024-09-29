@@ -36,7 +36,7 @@ export default async function Home() {
                     >
                         Get started
                     </Link>
-                    <img className='mt-48 mb-40 ' src="https://cdni.iconscout.com/illustration/premium/thumb/happy-people-illustration-download-in-svg-png-gif-file-formats--group-team-cheerful-pack-woman-illustrations-5811976.png" alt="" />
+                    <img className='mt-24 mb-40 mx-20 border rounded-lg border-gray-700 xl:w-4/5 w-full drop-shadow-[8px_8px_15px_rgba(0,100,255,0.5)]' src="/demoView.png" alt="" />
                 </div>
                 <div className={'p-8 lg:p-14 xl:p-20'}>
                     <div className='max-w-screen-lg mx-auto flex flex-wrap items-center'>

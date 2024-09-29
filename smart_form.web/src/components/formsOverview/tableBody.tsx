@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Form } from '@/services/formService';
 import { useSession } from 'next-auth/react';
 import { getFormResponse } from '@/services/formService';
 import Link from 'next/link'
 import { useQueryClient } from '@tanstack/react-query'
 import ActionButtons from './actionButtons';
+import { Form } from '../formEditor/protocol';
 
 const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
     const session = useSession();
