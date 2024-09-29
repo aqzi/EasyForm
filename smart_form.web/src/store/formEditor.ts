@@ -17,14 +17,14 @@ interface FormEditorState {
     setPlaceholder: (id: number, newPlaceholder?: string) => void,
     resetForm: () => void,
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => void,
-    setConfig: (id: number, newConfig: string) => void,
+    setConfig: (id: number, newConfig?: string) => void,
     setErrorMessage: (errorMessage?: string) => void,
     setRules: (rules: string) => void,
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
     title: '',
-    sortableItems: [{ id: 1, question: '', responseType: 'text', response: '' }],
+    sortableItems: [{ id: 1, question: '', responseType: 'text', response: '', config: undefined }],
     formCreatedBeforeLogin: false,
     setTitle: (title: string) => set({ title: title }),
     setSortableItems: (sortableItems: sortableItem[]) => set({ sortableItems: sortableItems }),
@@ -70,10 +70,11 @@ const useFormEditorStore = create<FormEditorState>()((set) => ({
         set({
             sortableItems: [{ id: 1, question: '', responseType: 'text', response: '' }],
             title: '',
+            rules: undefined
         })
     },
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => set({ formCreatedBeforeLogin: formCreatedBeforeLogin }),
-    setConfig: (id: number, newConfig: string) => {
+    setConfig: (id: number, newConfig?: string) => {
         set((state) => ({
             sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, config: newConfig } : q)
         }))

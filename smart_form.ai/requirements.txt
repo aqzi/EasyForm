@@ -1,2 +1,6 @@
 fastapi 
 uvicorn[standard]
+langchain-ollama
+langchain
+pydantic
+langchain-experimental

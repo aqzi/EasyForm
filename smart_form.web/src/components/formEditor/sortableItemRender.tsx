@@ -1,49 +1,52 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { GripVertical, ChevronRight, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { responseRender } from './formItemSettings/responseRender';
 import useFormEditorStore from '@/store/formEditor';
 import { configRender } from './formItemSettings/configRender';
 import { responseLabels, sortableItem, formActivity } from './protocol';
+import { setConfig } from 'next/config';
 
 const SortableItemRender = ({ item, seqNumber, formActivity }: { 
     item: sortableItem,
     seqNumber: number,
     formActivity: formActivity
 }) => {
+    const [showAllResponseTypes, setShowAllResponseTypes] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
-    const [activeTab, setActiveTab] = useState<'response' | 'config'>('response');
-    const { setQuestion, setResponseType, setResponse } = useFormEditorStore((state) => ({
+
+    const { setQuestion, setResponseType, setResponse, setConfig } = useFormEditorStore((state) => ({
         setQuestion: state.setQuestion,
         setResponseType: state.setResponseType,
         setResponse: state.setResponse,
+        setConfig: state.setConfig
     }))
-
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     }
 
-    const [isExpanded, setIsExpanded] = useState(false);
+    useEffect(() => {
+        if (textareaRef.current) {
+            // Reset the height to auto to allow it to shrink on text deletion
+            textareaRef.current.style.height = 'auto';
+            // Set the height based on the scroll height (text content)
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [item.question]);
 
     const handleMouseLeave = () => {
         setIsExpanded(false);
     };
 
-    useEffect(() => {
-        if (textareaRef.current) {
-          // Reset the height to auto to allow it to shrink on text deletion
-          textareaRef.current.style.height = 'auto';
-          // Set the height based on the scroll height (text content)
-          textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        }
-      }, [item.question]);
-
     return (
-        <div 
+        <div
             ref={setNodeRef} 
             style={style} 
             className="group flex flex-col p-2 pb-1 hover:bg-[#202020] rounded text-2xl"
@@ -104,48 +107,41 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
 
             {isExpanded && (
                 <div className="mt-4 rounded-md p-4 mb-1 border border-gray-700 text-xl">
-                    <div className="flex space-x-4 mb-4 border-b border-[#858585]">
+                    {!showAllResponseTypes && (
                         <button
-                            onClick={() => setActiveTab('response')}
-                            className={`px-4 py-1 rounded-t-lg border-t border-x ${
-                            activeTab === 'response'
-                                ? 'border-[#858585] bg-[#282828] text-white font-medium shadow-md'
-                                : 'border-transparent bg-[#282828] text-gray-300 hover:bg-[#353535] hover:text-white'
-                            } transition-colors duration-300`}
+                            onClick={() => setShowAllResponseTypes(true)}
+                            className="flex items-center mb-4 text-gray-400 font-semibold rounded-lg shadow-md hover:text-white"
                         >
-                            Response
+                            <ArrowLeft className="w-5 h-5" />
                         </button>
-                        <button
-                            onClick={() => setActiveTab('config')}
-                            className={`px-4 py-1 rounded-t-lg border-t border-x ${
-                            activeTab === 'config'
-                                ? 'border-[#858585] bg-[#282828] text-white font-medium shadow-md'
-                                : 'border-transparent bg-[#282828] text-gray-300 hover:bg-[#353535] hover:text-white'
-                            } transition-colors duration-300`}
-                        >
-                            Config
-                        </button>
-                    </div>
+                    )}
             
-                    {activeTab === 'response' && (
+                    {showAllResponseTypes && (
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xl">
                             {responseLabels.map((type) => (
                                 <button
-                                key={type.value}
-                                onClick={() => setResponseType(item.id, type.value as any)}
-                                className={`py-1 px-2 rounded text-left text-lg ${
-                                    item.responseType === type.value
-                                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium'
-                                    : 'bg-[#2c2c2c] text-gray-200 hover:bg-[#4f4f4f]'
-                                }`}
+                                    key={type.value}
+                                    onClick={() => {
+                                        if (type.value !== item.responseType) {
+                                            setConfig(item.id, undefined)
+                                        }
+
+                                        setResponseType(item.id, type.value as any)
+                                        setShowAllResponseTypes(false)
+                                    }}
+                                    className={`py-1 px-2 rounded text-left text-lg ${
+                                        item.responseType === type.value
+                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium'
+                                        : 'bg-[#2c2c2c] text-gray-200 hover:bg-[#4f4f4f]'
+                                    }`}
                                 >
-                                {type.label}
+                                    {type.label}
                                 </button>
                             ))}
                         </div>
                     )}
                     
-                    {activeTab === 'config' && (
+                    {!showAllResponseTypes && (
                         <div className='text-xl'>
                             {configRender({ responseItem: item, formActivity: formActivity  })}
                         </div>

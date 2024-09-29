@@ -16,6 +16,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
     }));
 
     useEffect(() => {
+        console.log(responseItem.config)
         if(!responseItem.config) {
             setConfig(responseItem.id, JSON.stringify({ options: ['', '', ''] })); // Update the config dynamically
             setErrorMessage('Give all the multiple choice options a value.');

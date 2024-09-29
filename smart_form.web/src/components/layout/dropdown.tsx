@@ -42,7 +42,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
 
     return (
         <div 
-            className="relative"
+            className="relative z-50"
             ref={dropdownRef}
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
