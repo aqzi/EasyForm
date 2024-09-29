@@ -7,7 +7,7 @@ type ErrorFields = 'fullname' | 'email' | 'subject' | 'message';
 const FeedbackForm = () => {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState('Feedback');
   const [extendedSubject, setExtendedSubject] = useState(''); // in the case subject is other
   const [message, setMessage] = useState('');
 
@@ -63,6 +63,8 @@ const FeedbackForm = () => {
     e.preventDefault();
 
     const isValidForm = handleValidation();
+
+    console.log('isValidForm', isValidForm);
 
     if (isValidForm) {
       setButtonText('Sending');
@@ -139,10 +141,10 @@ const FeedbackForm = () => {
             onChange={(e) => setSubject(e.target.value)}
             className="w-full py-2 pl-4 text-white bg-[#202020] border rounded-md shadow-sm outline-none appearance-none"
           >
-            <option>Feedback</option>
-            <option>Idea</option>
-            <option>Bug report</option>
-            <option>Other</option>
+            <option value="">Feedback</option>
+            <option value="Idea">Idea</option>
+            <option value="Bug report">Bug report</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         {subject === 'Other' ? (
