@@ -5,157 +5,157 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 enum FormResponseType {
-  text
-  multipleChoice
-  checkbox
-  image
-  file
-  date
-  yesOrNo
+    text
+    multipleChoice
+    checkbox
+    image
+    file
+    date
+    yesOrNo
 }
 
 model Form {
-  id    String     @id @default(uuid())
-  title  String
-  fields Field[]
-  rules String?
-  formCreators FormCreator[]
-  formResponses FormResponse[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id    String     @id @default(uuid())
+    title  String
+    fields Field[]
+    rules String?
+    formCreators FormCreator[]
+    formResponses FormResponse[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model FormCreator {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
-  formId    String
+    id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+    formId    String
 
-  @@unique([userId, formId])
+    @@unique([userId, formId])
 }
 
 model Field {
-  id    Int     @id @default(autoincrement())
-  question  String
-  responseType  FormResponseType @default(text)
-  placeholder String?
-  config Json?
-  sequenceNumber Int @default(1)
-  form  Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
-  formId  String
-  fieldResponses FieldResponse[]
+    id    Int     @id @default(autoincrement())
+    question  String
+    responseType  FormResponseType @default(text)
+    placeholder String?
+    config Json?
+    sequenceNumber Int @default(1)
+    form  Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
+    formId  String
+    fieldResponses FieldResponse[]
 }
 
 model FormResponse {
-  id String @id @default(uuid())
-  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
-  formId String
-  fieldResponses FieldResponse[]
-  submitted_at DateTime @default(now())
-  formResponder FormResponder?
+    id String @id @default(uuid())
+    form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+    formId String
+    fieldResponses FieldResponse[]
+    submitted_at DateTime @default(now())
+    formResponder FormResponder?
 }
 
 model FieldResponse {
-  id Int @id @default(autoincrement())
-  formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
-  formResponseId String
-  field Field @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-  fieldId Int
-  response String
+    id Int @id @default(autoincrement())
+    formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
+    formResponseId String
+    field Field @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+    fieldId Int
+    response String
 
-  @@unique([formResponseId, fieldId])
+    @@unique([formResponseId, fieldId])
 }
 
 model FormResponder {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
-  formResponseId String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    formResponse FormResponse @relation(fields: [formResponseId], references: [id], onDelete: Cascade)
+    formResponseId String @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@unique([userId, formResponseId])
+    @@unique([userId, formResponseId])
 }
 
 model User {
-  id            String          @id @default(uuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
-  formCreator FormCreator[]
-  formResponder FormResponder[]
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id            String          @id @default(uuid())
+    name          String?
+    email         String          @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    // Optional for WebAuthn support
+    Authenticator Authenticator[]
+    formCreator FormCreator[]
+    formResponder FormResponder[]
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
  
 model Account {
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([provider, providerAccountId])
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@id([provider, providerAccountId])
 }
  
 model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
  
 model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
- 
-  @@id([identifier, token])
+    identifier String
+    token      String
+    expires    DateTime
+    
+    @@id([identifier, token])
 }
  
 // Optional for WebAuthn support
 model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([userId, credentialID])
+    credentialID         String  @unique
+    userId               String
+    providerAccountId    String
+    credentialPublicKey  String
+    counter              Int
+    credentialDeviceType String
+    credentialBackedUp   Boolean
+    transports           String?
+    
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@id([userId, credentialID])
 }
