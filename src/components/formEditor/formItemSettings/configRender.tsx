@@ -1,31 +1,31 @@
-import { sortableItem, formActivity } from '../protocol';
+import { formActivity, formField } from '../protocol';
 import TextConfig from './text/config';
 import YesOrNoConfig from './yesOrNo/config';
 import MultipleChoiceConfig from './multipleChoice/config';
 
-export const configRender = ({ responseItem, formActivity }: { 
-    responseItem: sortableItem,
+export const configRender = ({ field, formActivity }: { 
+    field: formField,
     formActivity: formActivity
 }) => {
-    switch (responseItem.responseType) {
+    switch (field.responseType) {
         case 'text':
             return (
                 <TextConfig 
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             );
         case 'yesOrNo':
             return (
                 <YesOrNoConfig 
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             );
         case 'multipleChoice':
             return (
                 <MultipleChoiceConfig 
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             )

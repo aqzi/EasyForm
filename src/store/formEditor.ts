@@ -1,86 +1,76 @@
-import { responseTypes, sortableItem } from '@/components/formEditor/protocol';
+import { responseTypes, formField } from '@/components/formEditor/protocol';
 import { create } from 'zustand'
 
 interface FormEditorState {
     title: string,
-    rules?: string,
-    sortableItems: sortableItem[],
+    formFields: formField[],
     errorMessage?: string,
     formCreatedBeforeLogin: boolean,
     setTitle: (title: string) => void,
-    setSortableItems: (questions: sortableItem[]) => void,
-    addSortableItem: (question?: sortableItem) => void, //if question is undefined, add a default question
-    removeSortableItem: (id: number) => void,
-    setQuestion: (id: number, newQuestion: string) => void,
-    setResponseType: (id: number, newResponseType: responseTypes) => void,
-    setResponse: (id: number, newResponse: string) => void,
-    setPlaceholder: (id: number, newPlaceholder?: string) => void,
+    setFormFields: (questions: formField[]) => void,
+    addFormField: (question?: formField) => void, //if question is undefined, add a default question
+    removeFormField: (id: number) => void,
+    setFormFieldQuestion: (id: number, newQuestion: string) => void,
+    setFormFieldResponseType: (id: number, newResponseType: responseTypes) => void,
+    setFormFieldResponse: (id: number, newResponse: string) => void,
+    setFormFieldConfig: (id: number, newConfig?: string) => void,
     resetForm: () => void,
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => void,
-    setConfig: (id: number, newConfig?: string) => void,
     setErrorMessage: (errorMessage?: string) => void,
-    setRules: (rules: string) => void,
 }
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
     title: '',
-    sortableItems: [{ id: 1, question: '', responseType: 'text', response: '', config: undefined }],
+    formFields: [{ id: 1, question: '', responseType: 'text', response: '', config: undefined }],
     formCreatedBeforeLogin: false,
     setTitle: (title: string) => set({ title: title }),
-    setSortableItems: (sortableItems: sortableItem[]) => set({ sortableItems: sortableItems }),
-    addSortableItem: (question?: sortableItem) => set((state) => {
+    setFormFields: (formFields: formField[]) => set({ formFields: formFields }),
+    addFormField: (question?: formField) => set((state) => {
         if (question) {
-            return { sortableItems: [...state.sortableItems, question] };
+            return { formFields: [...state.formFields, question] };
         } else {
-            const maxId = state.sortableItems.length > 0 ? Math.max(...state.sortableItems.map(q => q.id)) : 0;
+            const maxId = state.formFields.length > 0 ? Math.max(...state.formFields.map(q => q.id)) : 0;
 
             return {
-                sortableItems: [
-                    ...state.sortableItems, { id: maxId + 1, question: '', responseType: 'text', response: '' }
+                formFields: [
+                    ...state.formFields, { id: maxId + 1, question: '', responseType: 'text', response: '' }
                 ]
             };
         }
     }),
-    removeSortableItem: (id: number) => {
+    removeFormField: (id: number) => {
         set((state) => ({
-            sortableItems: state.sortableItems.filter((q) => q.id !== id)
+            formFields: state.formFields.filter((q) => q.id !== id)
         }))
     },
-    setQuestion: (id: number, newQuestion: string) => {
+    setFormFieldQuestion: (id: number, newQuestion: string) => {
         set((state) => ({
-            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, question: newQuestion } : q)
+            formFields: state.formFields.map((q) => q.id === id ? { ...q, question: newQuestion } : q)
         }))
     },
-    setResponseType: (id: number, newResponseType: responseTypes) => {
+    setFormFieldResponseType: (id: number, newResponseType: responseTypes) => {
         set((state) => ({
-            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, responseType: newResponseType } : q)
+            formFields: state.formFields.map((q) => q.id === id ? { ...q, responseType: newResponseType } : q)
         }))
     },
-    setResponse: (id: number, newResponse: string) => {
+    setFormFieldResponse: (id: number, newResponse: string) => {
         set((state) => ({
-            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, response: newResponse } : q)
+            formFields: state.formFields.map((q) => q.id === id ? { ...q, response: newResponse } : q)
         }))
     },
-    setPlaceholder: (id: number, newPlaceholder?: string) => {
+    setFormFieldConfig: (id: number, newConfig?: string) => {
         set((state) => ({
-            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, placeholder: newPlaceholder } : q)
+            formFields: state.formFields.map((q) => q.id === id ? { ...q, config: newConfig } : q)
         }))
     },
     resetForm: () => {
         set({
-            sortableItems: [{ id: 1, question: '', responseType: 'text', response: '' }],
-            title: '',
-            rules: undefined
+            formFields: [{ id: 1, question: '', responseType: 'text', response: '' }],
+            title: ''
         })
     },
     setFormCreatedBeforeLogin: (formCreatedBeforeLogin: boolean) => set({ formCreatedBeforeLogin: formCreatedBeforeLogin }),
-    setConfig: (id: number, newConfig?: string) => {
-        set((state) => ({
-            sortableItems: state.sortableItems.map((q) => q.id === id ? { ...q, config: newConfig } : q)
-        }))
-    },
-    setErrorMessage: (errorMessage?: string) => set({ errorMessage: errorMessage }),
-    setRules: (rules: string) => set({ rules: rules }),
+    setErrorMessage: (errorMessage?: string) => set({ errorMessage: errorMessage })
 }))
 
 export default useFormEditorStore

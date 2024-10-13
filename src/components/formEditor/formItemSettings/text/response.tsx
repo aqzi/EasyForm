@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem, formActivity } from '../../protocol';
+import { formField, formActivity } from '../../protocol';
 import { jsonToObject, objectToJson } from '../../utils';
 import { protocol } from './protocol'
 
-const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
+const Response = ({ field, formActivity }: { field: formField, formActivity: formActivity }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { setResponse, setConfig } = useFormEditorStore((state) => ({
-        setResponse: state.setResponse,
-        setConfig: state.setConfig,
+    const { setFormFieldResponse, setFormFieldConfig } = useFormEditorStore((state) => ({
+        setFormFieldResponse: state.setFormFieldResponse,
+        setFormFieldConfig: state.setFormFieldConfig,
     }));
 
     useEffect(() => {
@@ -16,13 +16,13 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
             textareaRef.current.style.height = 'auto';
             textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
         }
-    }, [responseItem.response]);
+    }, [field.response]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (formActivity === 'createOrEdit') {
-            setConfig(responseItem.id, objectToJson({ placeholder: e.target.value }));
+            setFormFieldConfig(field.id, objectToJson({ placeholder: e.target.value }));
         } else if (formActivity === 'reply') {
-            setResponse(responseItem.id, e.target.value);
+            setFormFieldResponse(field.id, e.target.value);
         }
     };
 
@@ -30,7 +30,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
         <div className="text-response relative w-full text-white mt-2">
             <textarea
                 ref={textareaRef}
-                value={formActivity === 'createOrEdit' ? jsonToObject<protocol>(responseItem.config)?.placeholder : responseItem.response}
+                value={formActivity === 'createOrEdit' ? jsonToObject<protocol>(field.config)?.placeholder : field.response}
                 onChange={handleChange}
                 className={`
                     w-full min-h-[1.5em] py-2 px-2 resize-none overflow-hidden focus:outline-none 
@@ -40,7 +40,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                 `}
                 style={{ width: '100%' }}
                 rows={1}
-                placeholder={jsonToObject<protocol>(responseItem.config)?.placeholder || 'Type your response here...'}
+                placeholder={jsonToObject<protocol>(field.config)?.placeholder || 'Type your response here...'}
                 readOnly={formActivity === 'view'}
             />
         </div>

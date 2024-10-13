@@ -5,7 +5,7 @@ import Plus from '@/components/customSvg/plus';
 import Save from '@/components/customSvg/save';
 import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
-import FormRender from '@/components/formEditor/formRender';
+import FormEditor from '@/components/formEditor';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
@@ -19,12 +19,11 @@ const CreateForm = () => {
     const session = useSession()
     const router = useRouter();
 
-    const { title, rules, sortableItems, errorMessage, addSortableItem, resetForm, setErrorMessage } = useFormEditorStore((state) => ({
+    const { title, formFields, errorMessage, addFormField, resetForm, setErrorMessage } = useFormEditorStore((state) => ({
         title: state.title,
-        rules: state.rules,
-        sortableItems: state.sortableItems,
+        formFields: state.formFields,
         errorMessage: state.errorMessage,
-        addSortableItem: state.addSortableItem,
+        addFormField: state.addFormField,
         resetForm: state.resetForm,
         setErrorMessage: state.setErrorMessage
     }))
@@ -45,7 +44,7 @@ const CreateForm = () => {
     }, [])
 
     const handleAddQuestion = () => {
-        addSortableItem()
+        addFormField()
     }
 
     const handleSave = async () => {
@@ -58,7 +57,7 @@ const CreateForm = () => {
         if (!session.data?.user?.name) {
             //set data in local storage to be used after login
             localStorage.setItem('title', title);
-            localStorage.setItem('sortableItems', JSON.stringify(sortableItems));
+            localStorage.setItem('formFields', JSON.stringify(formFields));
 
             router.push('/register');
             return;
@@ -66,12 +65,10 @@ const CreateForm = () => {
 
         mutation.mutate({
             title,
-            rules,
-            fields: sortableItems.map((s, index) => ({
-                question: s.question,
-                responseType: s.responseType,
-                placeholder: s.placeholder,
-                config: s.config,
+            formFields: formFields.map((f, index) => ({
+                question: f.question,
+                responseType: f.responseType,
+                config: f.config,
                 sequenceNumber: index + 1
             }))
         })
@@ -81,8 +78,8 @@ const CreateForm = () => {
         let msg = errorMessage;
 
         if (title === '') msg = 'Please enter a title for the form.';
-        if (sortableItems.length === 0) msg = 'Please add at least one question to the form.';
-        if (sortableItems.some((s) => s.question === '')) msg = 'Please enter a question for all fields.';
+        if (formFields.length === 0) msg = 'Please add at least one question to the form.';
+        if (formFields.some((f) => f.question === '')) msg = 'Please enter a question for all fields.';
 
         if (msg) {
             setErrorMessage(msg);
@@ -117,7 +114,7 @@ const CreateForm = () => {
     return (
         <div className='h-screen p-4'>
             <Skeleton options={session.data?.user != undefined ? ['myForms', 'settings'] : []}>
-                <FormRender formActivity='createOrEdit' />
+                <FormEditor formActivity='createOrEdit' />
                 {(errorMessage && clickedSave) && <CustomAlert message={errorMessage} />}
                 <div className="absolute bottom-8 right-8 flex space-x-4">
                     <button

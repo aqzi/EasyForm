@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, sortableKeyboardCoordinates, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import SortableItemRender from '@/components/formEditor/sortableItemRender';
+import FormField from '@/components/formEditor/formField';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import useFormEditorStore from '@/store/formEditor';
 import { formActivity } from '../protocol';
 
 const Editor = ({formActivity}: {formActivity: formActivity}) => {
-    const { sortableItems, setSortableItems } = useFormEditorStore((state) => ({
+    const { formFields, setFormFields } = useFormEditorStore((state) => ({
         title: state.title,
-        sortableItems: state.sortableItems,
-        setSortableItems: state.setSortableItems,
+        formFields: state.formFields,
+        setFormFields: state.setFormFields,
         setTitle: state.setTitle,
     }))   
 
@@ -25,24 +25,24 @@ const Editor = ({formActivity}: {formActivity: formActivity}) => {
         const { active, over } = event
 
         if (over && active.id !== over.id) {
-            const oldIndex = sortableItems.findIndex((s) => s.id === active.id)
-            const newIndex = sortableItems.findIndex((s) => s.id === over.id)
+            const oldIndex = formFields.findIndex((f) => f.id === active.id)
+            const newIndex = formFields.findIndex((f) => f.id === over.id)
 
-            setSortableItems(arrayMove(sortableItems, oldIndex, newIndex))
+            setFormFields(arrayMove(formFields, oldIndex, newIndex))
         }
     }
 
-    const SortableItemsRender = useMemo(() => {
-        return sortableItems.map((s, index) => (
-            <div id={`question-${s.id}`} key={s.id}>
-                <SortableItemRender 
-                    item={s}
+    const FormFieldRender = useMemo(() => {
+        return formFields.map((f, index) => (
+            <div id={`question-${f.id}`} key={f.id}>
+                <FormField 
+                    item={f}
                     seqNumber={index + 1}
                     formActivity={formActivity}
                 />
             </div>
         ))
-    }, [sortableItems])
+    }, [formFields])
     
     const DragComponent = useMemo(() => {
         return (
@@ -53,19 +53,19 @@ const Editor = ({formActivity}: {formActivity: formActivity}) => {
                 modifiers={[restrictToVerticalAxis]}
             >
                 <SortableContext 
-                    items={sortableItems.map(s => s.id)}
+                    items={formFields.map(f => f.id)}
                     strategy={verticalListSortingStrategy}
                 >
-                    {SortableItemsRender}
+                    {FormFieldRender}
                 </SortableContext>
             </DndContext>
         )
-    }, [sensors, handleDragEnd, sortableItems, SortableItemsRender])
+    }, [sensors, handleDragEnd, formFields, FormFieldRender])
 
     if (formActivity === 'createOrEdit') {
         return DragComponent
     } else {
-        return SortableItemsRender
+        return FormFieldRender
     }
 }
 

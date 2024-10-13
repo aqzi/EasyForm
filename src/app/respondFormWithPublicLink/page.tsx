@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Save from '@/components/customSvg/save';
 import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
-import FormRender from '@/components/formEditor/formRender';
+import FormEditor from '@/components/formEditor';
 import { useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getForm, respondForm } from '@/services/formService';
@@ -22,11 +22,10 @@ const RespondFormWithPublicLink = () => {
 
     if (!formId) return null;
 
-    const { sortableItems, setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
-        sortableItems: state.sortableItems,
+    const { formFields, setTitle, setFormFields } = useFormEditorStore((state) => ({
+        formFields: state.formFields,
         setTitle: state.setTitle,
-        setRules: state.setRules,
-        setSortableItems: state.setSortableItems
+        setFormFields: state.setFormFields
     }))
 
     const { isPending, error, data } = useQuery({
@@ -48,8 +47,7 @@ const RespondFormWithPublicLink = () => {
     useEffect(() => {
         if(!isPending && !error && data) {
             setTitle(data.title)
-            setRules(data.rules)
-            setSortableItems(data.fields)
+            setFormFields(data.formFields)
         }
     }, [isPending, error]);
 
@@ -57,9 +55,9 @@ const RespondFormWithPublicLink = () => {
         mutation.mutate({
             id: formId,
             userId: session.data?.user?.id || null,
-            responses: sortableItems.map((s, index) => ({
-                response: s.response,
-                fieldId: s.id,
+            formResponses: formFields.map((f, index) => ({
+                fieldResponse: f.response,
+                formFieldId: f.id,
                 sequenceNumber: index + 1
             }))
         })
@@ -82,7 +80,7 @@ const RespondFormWithPublicLink = () => {
                         {
                             !savedSuccessfully ? 
                             <>
-                                <FormRender formActivity='reply' />
+                                <FormEditor formActivity='reply' />
                                 <div className="absolute bottom-8 right-8 flex space-x-4">
                                     <button
                                         onClick={handleSave}

@@ -15,10 +15,10 @@ export const GET = auth(async function GET(req) {
         const response = await prisma.formResponse.findUnique({
             where: { id: formId },
             select: {
-                fieldResponses: {
+                formFieldResponses: {
                     select: {
-                        field: true,
-                        response: true
+                        formField: true,
+                        fieldResponse: true
                     }
                 },
                 form: true
@@ -31,10 +31,9 @@ export const GET = auth(async function GET(req) {
 
         const data = {
             title: response.form.title,
-            rules: response.form.rules,
-            fields: response.fieldResponses.map((fr: any) => ({
-                ...fr.field,
-                response: fr.response
+            formFields: response.formFieldResponses.map((fr: any) => ({
+                ...fr.formField,
+                response: fr.fieldResponse
             }))
         }
 
@@ -48,7 +47,7 @@ export const GET = auth(async function GET(req) {
 })
 
 export async function POST(req: NextRequest) {
-    const { id, userId, responses } = await req.json();
+    const { id, userId, formResponses } = await req.json();
     
     try {
         if (!id) {
@@ -58,15 +57,15 @@ export async function POST(req: NextRequest) {
         const formResponse = await prisma.formResponse.create({
             data: {
                 formId: id,
-                fieldResponses: {
-                    create: responses.map((response: { fieldId: number; response: string }) => ({
-                        fieldId: response.fieldId,
-                        response: response.response
+                formFieldResponses: {
+                    create: formResponses.map((response: { formFieldId: number; fieldResponse: string }) => ({
+                        formFieldId: response.formFieldId,
+                        fieldResponse: response.fieldResponse
                     }))
                 }
             },
             include: {
-                fieldResponses: true,
+                formFieldResponses: true,
             }
         });
 

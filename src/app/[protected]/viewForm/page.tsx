@@ -1,11 +1,9 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Plus from '@/components/customSvg/plus';
-import Save from '@/components/customSvg/save';
 import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
-import FormRender from '@/components/formEditor/formRender';
+import FormEditor from '@/components/formEditor';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -13,10 +11,9 @@ import { getFormResponse } from '@/services/formService';
 import { useQuery } from '@tanstack/react-query';
 
 const ViewForm: React.FC = () => {
-    const { setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
+    const { setTitle, setFormFields } = useFormEditorStore((state) => ({
         setTitle: state.setTitle,
-        setRules: state.setRules,
-        setSortableItems: state.setSortableItems,
+        setFormFields: state.setFormFields,
     }))
 
     const router = useRouter();
@@ -39,15 +36,16 @@ const ViewForm: React.FC = () => {
 
     useEffect(() => {
         if(!isPending && !error && data) {
+            console.log(data)
+
             setTitle(data.title)
-            setRules(data.rules)
-            setSortableItems(data.fields)
+            setFormFields(data.formFields)
         }
     }, [isPending, error]);
 
     return (
         <Skeleton options={['createForm', 'myForms', 'settings']}>
-            <FormRender formActivity='view' />
+            <FormEditor formActivity='view' />
         </Skeleton>
     )
 }

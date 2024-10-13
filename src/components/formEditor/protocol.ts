@@ -12,12 +12,11 @@ export interface Form
 
 export type formActivity = 'createOrEdit' | 'view' | 'reply'
 
-export interface sortableItem {
+export interface formField {
     id: number;
     question: string;
     responseType: responseTypes;
     response: string;
-    placeholder?: string;
     config?: string;
 }
 

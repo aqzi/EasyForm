@@ -1,16 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { sortableItem, formActivity } from '../../protocol';
+import React from 'react';
+import { formField, formActivity } from '../../protocol';
 import useFormEditorStore from '@/store/formEditor';
-import { jsonToObject, objectToJson } from '../../utils';
-import { protocol } from './protocol';
+import { objectToJson } from '../../utils';
 
-const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
-    const { setConfig } = useFormEditorStore((state) => ({
-        setConfig: state.setConfig
+const Config = ({ field, formActivity }: { field: formField, formActivity: formActivity }) => {
+    const { setFormFieldConfig } = useFormEditorStore((state) => ({
+        setFormFieldConfig: state.setFormFieldConfig
     }));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setConfig(responseItem.id, objectToJson({ options: e.target.value })); // Update the config dynamically
+        setFormFieldConfig(field.id, objectToJson({ options: e.target.value })); // Update the config dynamically
     };
 
     return (

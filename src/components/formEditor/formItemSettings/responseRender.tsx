@@ -1,31 +1,31 @@
 import TextResponse from './text/response';
 import YesOrNoResponse from './yesOrNo/response';
 import MultipleChoiceResponse from './multipleChoice/response';
-import { sortableItem, formActivity } from '../protocol';
+import { formField, formActivity } from '../protocol';
 
-export const responseRender = ({ responseItem, formActivity }: { 
-    responseItem: sortableItem,
+export const responseRender = ({ field, formActivity }: { 
+    field: formField,
     formActivity: formActivity
 }) => {
-    switch (responseItem.responseType) {
+    switch (field.responseType) {
         case 'text':
             return (
                 <TextResponse
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             );
         case 'yesOrNo':
             return (
                 <YesOrNoResponse
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             );
         case 'multipleChoice':
             return (
                 <MultipleChoiceResponse
-                    responseItem={responseItem}
+                    field={field}
                     formActivity={formActivity}
                 />
             );

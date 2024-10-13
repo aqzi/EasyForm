@@ -5,7 +5,7 @@ import Plus from '@/components/customSvg/plus';
 import Save from '@/components/customSvg/save';
 import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
-import FormRender from '@/components/formEditor/formRender';
+import FormEditor from '@/components/formEditor';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -13,13 +13,12 @@ import { editForm, getForm } from '@/services/formService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const EditForm: React.FC = () => {
-    const { title, sortableItems, addSortableItem, setTitle, setRules, setSortableItems } = useFormEditorStore((state) => ({
+    const { title, formFields, addFormField, setTitle, setFormFields } = useFormEditorStore((state) => ({
         title: state.title,
-        sortableItems: state.sortableItems,
-        addSortableItem: state.addSortableItem,
+        formFields: state.formFields,
+        addFormField: state.addFormField,
         setTitle: state.setTitle,
-        setRules: state.setRules,
-        setSortableItems: state.setSortableItems,
+        setFormFields: state.setFormFields,
     }))
 
     const router = useRouter();
@@ -55,8 +54,7 @@ const EditForm: React.FC = () => {
     useEffect(() => {
         if(!isPending && !error && data) {
             setTitle(data.title)
-            setRules(data.rules)
-            setSortableItems(data.fields)
+            setFormFields(data.formFields)
         }
     }, [isPending, error]);
 
@@ -64,24 +62,23 @@ const EditForm: React.FC = () => {
         mutation.mutate({
             id: formId,
             title,
-            fields: sortableItems.map((s, index) => ({
-                id: s.id,
-                question: s.question,
-                responseType: s.responseType,
-                placeholder: s.placeholder,
-                config: s.config,
+            formFields: formFields.map((f, index) => ({
+                id: f.id,
+                question: f.question,
+                responseType: f.responseType,
+                config: f.config,
                 sequenceNumber: index + 1
             }))
         })
     };
 
     const handleAddQuestion = () => {
-        addSortableItem()
+        addFormField()
     }
 
     return (
         <Skeleton options={['createForm', 'myForms', 'settings']}>
-            <FormRender formActivity='createOrEdit' />
+            <FormEditor formActivity='createOrEdit' />
             <div className="absolute bottom-8 right-8 flex space-x-4">
                 <button
                     onClick={updateForm}

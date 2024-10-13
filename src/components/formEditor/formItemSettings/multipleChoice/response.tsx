@@ -1,40 +1,40 @@
 import React, { use, useEffect, useState } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem, formActivity } from '../../protocol';
+import { formField, formActivity } from '../../protocol';
 import { LucidePlus, LucideX } from 'lucide-react';
 import { jsonToObject, objectToJson } from '../../utils';
 import { protocol } from './protocol';
 
-const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
+const Response = ({ field, formActivity }: { field: formField, formActivity: formActivity }) => {
     const [hoveredOption, setHoveredOption] = useState<number>(-1); // Track the hovered option by index
     const [hoveredResponse, setHoveredResponse] = useState(false);
 
-    const { setResponse, setConfig, setErrorMessage } = useFormEditorStore((state) => ({
-        setResponse: state.setResponse,
-        setConfig: state.setConfig,
+    const { setFormFieldResponse, setFormFieldConfig, setErrorMessage } = useFormEditorStore((state) => ({
+        setFormFieldResponse: state.setFormFieldResponse,
+        setFormFieldConfig: state.setFormFieldConfig,
         setErrorMessage: state.setErrorMessage,
     }));
 
     useEffect(() => {
-        console.log(responseItem.config)
-        if(!responseItem.config) {
-            setConfig(responseItem.id, JSON.stringify({ options: ['', '', ''] })); // Update the config dynamically
+        console.log(field.config)
+        if(!field.config) {
+            setFormFieldConfig(field.id, JSON.stringify({ options: ['', '', ''] })); // Update the config dynamically
             setErrorMessage('Give all the multiple choice options a value.');
         }
     }, [])
 
     const handleClick = (option: string) => {
         if (formActivity === 'reply') {
-            setResponse(responseItem.id, option);
+            setFormFieldResponse(field.id, option);
         }
     };
 
     const handleInputChange = (index: number, value: string) => {
-        const tmp = jsonToObject<protocol>(responseItem.config)?.options;
+        const tmp = jsonToObject<protocol>(field.config)?.options;
         if (tmp) {
             const updatedOptions = [...tmp];
             updatedOptions[index] = value;
-            setConfig(responseItem.id, objectToJson({ options: updatedOptions }));
+            setFormFieldConfig(field.id, objectToJson({ options: updatedOptions }));
 
             if (updatedOptions.includes('')) {
                 setErrorMessage('Give all the multiple choice options a value.');
@@ -45,16 +45,16 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
     };
 
     const addNewInput = () => {
-        const tmp = jsonToObject<protocol>(responseItem.config)?.options;
+        const tmp = jsonToObject<protocol>(field.config)?.options;
         if (tmp) {
-            setConfig(responseItem.id, objectToJson({ options: [...tmp, ''] }));
+            setFormFieldConfig(field.id, objectToJson({ options: [...tmp, ''] }));
         }
     };
 
     const removeInput = (index: number) => {
-        const updatedOptions = jsonToObject<protocol>(responseItem.config)?.options.filter((_, i) => i !== index);
+        const updatedOptions = jsonToObject<protocol>(field.config)?.options.filter((_, i) => i !== index);
         if (updatedOptions) {
-            setConfig(responseItem.id, objectToJson({ options: updatedOptions }));
+            setFormFieldConfig(field.id, objectToJson({ options: updatedOptions }));
         }
     };
 
@@ -67,7 +67,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                 setHoveredResponse(false)
             }}
         >
-            {jsonToObject<protocol>(responseItem.config)?.options.map((option, index) => (
+            {jsonToObject<protocol>(field.config)?.options.map((option, index) => (
                 <div key={index} className="relative group flex flex-row">
                     {formActivity === 'createOrEdit' ?
                         <input
@@ -88,7 +88,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
                                 px-4 rounded-md font-medium border border-gray-500
                                  text-white
                                 transition-all duration-200 ease-in-out w-32 text-left
-                                ${responseItem.response === option ? 'bg-blue-500 shadow-sm' : 'hover:bg-[#2b2b2c]'}
+                                ${field.response === option ? 'bg-blue-500 shadow-sm' : 'hover:bg-[#2b2b2c]'}
                                 ${formActivity === 'view' && 'cursor-default'}
                             `}
                         >

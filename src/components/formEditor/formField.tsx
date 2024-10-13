@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, ChevronRight, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
+import { GripVertical, ChevronUp, ArrowLeft } from 'lucide-react';
 import { responseRender } from './formItemSettings/responseRender';
 import useFormEditorStore from '@/store/formEditor';
 import { configRender } from './formItemSettings/configRender';
-import { responseLabels, sortableItem, formActivity } from './protocol';
-import { setConfig } from 'next/config';
+import { responseLabels, formField, formActivity } from './protocol';
 
-const SortableItemRender = ({ item, seqNumber, formActivity }: { 
-    item: sortableItem,
+const FormField = ({ item, seqNumber, formActivity }: { 
+    item: formField,
     seqNumber: number,
     formActivity: formActivity
 }) => {
@@ -20,11 +19,10 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
 
-    const { setQuestion, setResponseType, setResponse, setConfig } = useFormEditorStore((state) => ({
-        setQuestion: state.setQuestion,
-        setResponseType: state.setResponseType,
-        setResponse: state.setResponse,
-        setConfig: state.setConfig
+    const { setFormFieldQuestion, setFormFieldResponseType, setFormFieldConfig } = useFormEditorStore((state) => ({
+        setFormFieldQuestion: state.setFormFieldQuestion,
+        setFormFieldResponseType: state.setFormFieldResponseType,
+        setFormFieldConfig: state.setFormFieldConfig
     }))
     
     const style = {
@@ -65,7 +63,7 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
                             <textarea
                                 value={item.question}
                                 ref={textareaRef}
-                                onChange={(e) => setQuestion(item.id, e.target.value)}
+                                onChange={(e) => setFormFieldQuestion(item.id, e.target.value)}
                                 placeholder="Enter your question"
                                 className={`w-full bg-transparent text-gray-200 focus:outline-none resize-none overflow-hidden ${formActivity === 'view' ? 'cursor-default' : ''}`}
                                 rows={1}
@@ -79,7 +77,7 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
                                 readOnly={formActivity === 'view'}
                             />
                             <div className='mt-2 text-xl'>
-                                {responseRender({ responseItem: item, formActivity: formActivity  })}
+                                {responseRender({ field: item, formActivity: formActivity  })}
                             </div>
                         </div>
                     </div>
@@ -123,10 +121,10 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
                                     key={type.value}
                                     onClick={() => {
                                         if (type.value !== item.responseType) {
-                                            setConfig(item.id, undefined)
+                                            setFormFieldConfig(item.id, undefined)
                                         }
 
-                                        setResponseType(item.id, type.value as any)
+                                        setFormFieldResponseType(item.id, type.value as any)
                                         setShowAllResponseTypes(false)
                                     }}
                                     className={`py-1 px-2 rounded text-left text-lg ${
@@ -143,7 +141,7 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
                     
                     {!showAllResponseTypes && (
                         <div className='text-xl'>
-                            {configRender({ responseItem: item, formActivity: formActivity  })}
+                            {configRender({ field: item, formActivity: formActivity  })}
                         </div>
                     )}
                 </div>
@@ -152,4 +150,4 @@ const SortableItemRender = ({ item, seqNumber, formActivity }: {
     )
 }
 
-export default SortableItemRender;
+export default FormField;

@@ -1,16 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem, formActivity } from '../../protocol';
+import { formField, formActivity } from '../../protocol';
 import { jsonToObject, objectToJson } from '../../utils';
 import { protocol } from './protocol';
 
-const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
-    const { setConfig } = useFormEditorStore((state) => ({
-        setConfig: state.setConfig
+const Config = ({ field, formActivity }: { field: formField, formActivity: formActivity }) => {
+    const { setFormFieldConfig } = useFormEditorStore((state) => ({
+        setFormFieldConfig: state.setFormFieldConfig
     }));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setConfig(responseItem.id, objectToJson({ placeholder: e.target.value })); // Update the config dynamically
+        setFormFieldConfig(field.id, objectToJson({ placeholder: e.target.value })); // Update the config dynamically
     };
 
     return (
@@ -21,7 +21,7 @@ const Config = ({ responseItem, formActivity }: { responseItem: sortableItem, fo
             <input
                 id="placeholder-input"
                 type="text"
-                value={jsonToObject<protocol>(responseItem.config)?.placeholder}
+                value={jsonToObject<protocol>(field.config)?.placeholder}
                 onChange={handleInputChange}
                 placeholder="Type something..."
                 className="w-full px-3 py-1 text-gray-200 bg-transparent border border-gray-600 rounded-lg outline-none transition-colors duration-200 ease-in-out"

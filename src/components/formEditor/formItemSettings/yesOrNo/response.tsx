@@ -1,16 +1,16 @@
 import React from 'react';
 import useFormEditorStore from '@/store/formEditor';
-import { sortableItem, formActivity } from '../../protocol';
+import { formActivity, formField } from '../../protocol';
 
-const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, formActivity: formActivity }) => {
-    const { setResponse } = useFormEditorStore((state) => ({
-        setResponse: state.setResponse,
+const Response = ({ field, formActivity }: { field: formField, formActivity: formActivity }) => {
+    const { setFormFieldResponse } = useFormEditorStore((state) => ({
+        setFormFieldResponse: state.setFormFieldResponse,
     }));
 
     const getButtonClasses = (option: string) => {
         if (formActivity === 'createOrEdit') {
             return 'bg-transparent hover:bg-transparent'
-        } else if (responseItem.response === option) {
+        } else if (field.response === option) {
             return 'bg-blue-500 shadow-sm'
         } else {
             return 'bg-transparent hover:bg-[#2b2b2c]'
@@ -19,7 +19,7 @@ const Response = ({ responseItem, formActivity }: { responseItem: sortableItem, 
 
     const handleClick = (option: string) => {
         if (formActivity === 'reply') {
-            setResponse(responseItem.id, option);
+            setFormFieldResponse(field.id, option);
         }
     };
 
