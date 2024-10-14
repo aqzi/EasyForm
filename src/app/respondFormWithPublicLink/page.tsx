@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Save from '@/components/customSvg/save';
+import Save from '@/components/formEditor/buttons/save';
 import Skeleton from '@/components/layout/skeleton';
 import useFormEditorStore from '@/store/formEditor';
 import FormEditor from '@/components/formEditor';
