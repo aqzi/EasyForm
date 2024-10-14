@@ -4,13 +4,12 @@ import { getFormResponse } from '@/services/formService';
 import Link from 'next/link'
 import { useQueryClient } from '@tanstack/react-query'
 import ActionButtons from './actionButtons';
-import { Form } from '../formEditor/protocol';
+import { form } from '../formEditor/protocol';
 
-const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
+const TableBody: React.FC<{ forms: form[] }> = ({ forms }) => {
     const session = useSession();
     const [expandedFormId, setExpandedFormId] = useState<string | null>(null);
     const [hoveredItem, setHoveredItem] = useState<number|undefined>(); //number indicates the row that is hovered
-    const [activeItem, setActiveItem] = useState<number|undefined>(); //number indicates the row that is hovered
 
     const queryClient = useQueryClient();
 
@@ -32,40 +31,40 @@ const TableBody: React.FC<{ forms: Form[] }> = ({ forms }) => {
 
     return (
         <tbody className="bg-[#212121] divide-y-2 divide-[#1a1a1a]">
-            {forms.map((form, idx) => (
-                <React.Fragment key={form.formId}>
+            {forms.map((f, idx) => (
+                <React.Fragment key={f.formId}>
                     <tr
-                        className={`hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${expandedFormId === form.formId ? 'bg-[#1a1a1a]' : ''}`}
+                        className={`hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${expandedFormId === f.formId ? 'bg-[#1a1a1a]' : ''}`}
                         onMouseEnter={() => setHoveredItem(idx)}
                         onMouseLeave={() => setHoveredItem(undefined)}
-                        onClick={() => toggleExpand(form.formId, form.responses, idx)}
+                        onClick={() => toggleExpand(f.formId, f.responses, idx)}
                     >
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-200">{form.title}</div>
+                            <div className="text-sm font-medium text-gray-200">{f.title}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-400">{new Date(form.createdAt).toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-400">{new Date(f.createdAt).toLocaleDateString()}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-400">{form.responses.length}</div>
+                            <div className="text-sm text-gray-400">{f.responses.length}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <ActionButtons formId={form.formId} showEditBtn={form.responses.length === 0} showMenu={idx === hoveredItem}/>
+                            <ActionButtons formId={f.formId} showEditBtn={f.responses.length === 0} showMenu={idx === hoveredItem}/>
                         </td>
                     </tr>
-                    {expandedFormId === form.formId && (
+                    {expandedFormId === f.formId && (
                         <tr>
                             <td colSpan={4} className="px-6 py-4">
                                 <div className="bg-[#292929] p-4 rounded-md">
                                     {
-                                        form.responses.length === 0 ?
+                                        f.responses.length === 0 ?
                                         <p>No responses received yet</p>
                                         :
                                         <>
                                             <h3 className="text-lg font-semibold mb-2">Responses: </h3>
                                             <table className="w-full border-separate border-spacing-y-3">
                                                 <tbody>
-                                                    {form.responses.map((r) => (
+                                                    {f.responses.map((r) => (
                                                     <tr
                                                         key={r.responseId}
                                                         className="transition-colors duration-200"

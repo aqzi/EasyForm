@@ -1,11 +1,12 @@
 import { responseTypes, formField } from '@/components/formEditor/protocol';
 import { create } from 'zustand'
 
+//This store is used to manage the state of the form editor.
 interface FormEditorState {
     title: string,
     formFields: formField[],
     errorMessage?: string,
-    formCreatedBeforeLogin: boolean,
+    formCreatedBeforeLogin: boolean, //When user creates a form before logging in, this is set to true and the user will be redirected to the login page when saving the form
     setTitle: (title: string) => void,
     setFormFields: (questions: formField[]) => void,
     addFormField: (question?: formField) => void, //if question is undefined, add a default question
@@ -21,7 +22,7 @@ interface FormEditorState {
 
 const useFormEditorStore = create<FormEditorState>()((set) => ({
     title: '',
-    formFields: [{ id: 1, question: '', responseType: 'text', response: '', config: undefined }],
+    formFields: [{ id: 1, question: '', responseType: 'text', response: '', config: undefined }], //Start with 1 empty form field
     formCreatedBeforeLogin: false,
     setTitle: (title: string) => set({ title: title }),
     setFormFields: (formFields: formField[]) => set({ formFields: formFields }),

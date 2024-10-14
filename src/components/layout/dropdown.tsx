@@ -3,7 +3,7 @@ import { List, Settings, FileText } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import useFormEditorStore from '@/store/formEditor';
 import Link from 'next/link'
-import './hamburgerMenu.css';
+import './dropdown.css';
 
 
 export type DropdownOption = 'myForms' | 'createForm' | 'settings';
@@ -27,6 +27,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
         settings: { icon: Settings, text: 'Settings', href: `/${session?.data?.user?.name?.replace(/\s+/g, "")}/settings` },
     };
 
+    // Close the dropdown when moving the mouse outside of it
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -60,7 +61,7 @@ const FormOptionsDropdown: React.FC<FormOptionsDropdownProps> = ({ options }) =>
                 </div>
             </button>
             <div 
-                className={`absolute right-0 w-56 rounded-lg shadow-lg bg-[#1e1e1e] ring-1 ring-gray-700 transition-all duration-200 ease-in-out ${
+                className={`absolute right-0 w-56 rounded-lg shadow-lg bg-primary ring-1 ring-gray-700 transition-all duration-200 ease-in-out ${
                     isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
                 }`}
             >

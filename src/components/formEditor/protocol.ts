@@ -1,4 +1,4 @@
-export interface Form
+export interface form
 {
     formId: string;
     title: string;
@@ -10,8 +10,6 @@ export interface Form
     }[];
 }
 
-export type formActivity = 'createOrEdit' | 'view' | 'reply'
-
 export interface formField {
     id: number;
     question: string;
@@ -20,8 +18,11 @@ export interface formField {
     config?: string;
 }
 
+export type formActivity = 'createOrEdit' | 'view' | 'reply'
+
 export type responseTypes = 'text' | 'multipleChoice' | 'checkbox' | 'image' | 'file' | 'date' | 'yesOrNo' ;
 
+//TODO: Improve this such that the value doesn't have to be specified both in responseTypes and responseLabels
 export const responseLabels = [
     { value: 'text', label: 'Text' },
     { value: 'yesOrNo', label: 'Yes or No' },

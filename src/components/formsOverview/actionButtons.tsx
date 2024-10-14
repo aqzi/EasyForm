@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteForm, getForm } from "@/services/formService";
 
-
+//Defines all the actions that can be performed on each form in the user's workspace
 const ActionButtons: React.FC<{formId: string, showEditBtn: boolean, showMenu: boolean}> = ({formId, showEditBtn, showMenu}) => {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [shareFormId, setShareFormId] = useState<string | null>(null);

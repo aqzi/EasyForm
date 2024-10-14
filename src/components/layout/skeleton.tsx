@@ -7,6 +7,7 @@ interface SkeletonProps {
     children: React.ReactNode;
 }
 
+//This defines the layout of the platform
 const Skeleton: React.FC<SkeletonProps> = ({ options, children }) => {
     return (
         <div className="flex relative justify-center h-full w-full bg-[#1e1e1e] p-4 overflow-hidden">

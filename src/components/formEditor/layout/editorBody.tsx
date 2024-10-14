@@ -6,7 +6,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import useFormEditorStore from '@/store/formEditor';
 import { formActivity } from '../protocol';
 
-const Editor = ({formActivity}: {formActivity: formActivity}) => {
+const EditorBody = ({formActivity}: {formActivity: formActivity}) => {
     const { formFields, setFormFields } = useFormEditorStore((state) => ({
         title: state.title,
         formFields: state.formFields,
@@ -69,4 +69,4 @@ const Editor = ({formActivity}: {formActivity: formActivity}) => {
     }
 }
 
-export default React.memo(Editor)
+export default React.memo(EditorBody)

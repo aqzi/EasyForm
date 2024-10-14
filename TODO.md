@@ -1,6 +1,3 @@
-# Web
-
-### Reply Form
-- Small security check by storing ip-address with response to prevent spamming
-- Prevent that forms can be saved multiple times
+- Prevent that form responses and creations can be saved multiple times
 - Add validation check when anwsering form to make sure all fields are filled in
+- Add more response types and make sure the sytem to add new responses is more a plugin system

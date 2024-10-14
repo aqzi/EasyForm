@@ -6,6 +6,7 @@ import Link from 'next/link';
 const LoginBtn = async (props: { isDarkMode: boolean }) => {
     const session = await auth()
 
+    //When the user is logged in, the workspace link is displayed
     if (session?.user) {
         return (
             <Link 
@@ -17,6 +18,7 @@ const LoginBtn = async (props: { isDarkMode: boolean }) => {
         )
     }
 
+    //Only be displayed if the user is not logged in
     return (
         <Link 
             href="/register"

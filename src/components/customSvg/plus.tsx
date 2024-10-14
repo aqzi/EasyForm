@@ -10,23 +10,13 @@ const Plus = () => {
                 cy="50"
                 r="45"
                 fill="none"
-                stroke="#8f9bd4"
-                strokeWidth="2"
-                className="transition-all duration-300 ease-in-out group-hover:stroke-[#8f9bd4]"
+                className="transition-all duration-300 ease-in-out stroke-blue-accent stroke-2"
             />
             <path
                 d="M50 25v50M25 50h50"
-                stroke="#8f9bd4"
                 strokeWidth="4"
                 strokeLinecap="round"
-                className="transition-all duration-300 ease-in-out group-hover:stroke-[#8f9bd4]"
-            />
-            <circle
-                cx="50"
-                cy="50"
-                r="0"
-                fill="#8f9bd4"
-                className="transition-all duration-300 ease-in-out group-hover:r-[45]"
+                className="transition-all duration-300 ease-in-out stroke-blue-accent"
             />
         </svg>
     )

@@ -26,11 +26,11 @@ export default async function Home() {
                     <Link
                         href="/createForm"
                         prefetch={true}
-                        className="bg-[#222222] text-white border border-[#34d399] px-5 py-2 rounded-md xl:text-xl text-lg font-bold hover:bg-[#292929] transition-colors inline-block"
+                        className="bg-[#222222] text-white border border-green-accent px-5 py-2 rounded-md xl:text-xl text-lg font-bold hover:bg-[#292929] transition-colors inline-block"
                     >
                         Get started
                     </Link>
-                    <img className='mt-24 mb-40 mx-20 border rounded-lg border-gray-700 lg:w-3/4 xl:w-2/4 w-full drop-shadow-[8px_8px_15px_rgba(0,100,255,0.5)]' src="/demoView.png" alt="" />
+                    <img className='mt-24 mb-40 mx-20 border rounded-lg border-blue-accent lg:w-3/4 xl:w-3/5 w-full drop-shadow-[8px_8px_15px_rgba(0,100,255,0.5)]' src="/demoView.png" alt="" />
                 </div>
             </div>
         </main>

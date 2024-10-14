@@ -8,6 +8,7 @@ interface SettingsCardProps {
     onClick: () => void;
 }
 
+//Each setting item should be wrapped in this card! (see ./items/Profile.tsx as an example)
 const SettingsCard: React.FC<SettingsCardProps> = ({ icon: Icon, title, children, isActive, onClick }) => (
     <section
         className={`bg-[#1a1a1a] rounded-lg shadow-lg border border-gray-700 transition-all duration-300 w-full ${
@@ -26,8 +27,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ icon: Icon, title, children
                 className={`h-6 w-6 text-gray-400 transition-transform duration-300 transform ${isActive && 'rotate-180'}`} 
             />
         </h2>
-        <div className={`px-6 overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-            isActive ? 'max-h-[1000px]' : 'max-h-0'
+        <div className={`px-6 overflow-hidden transition-all duration-300 ease-in-out space-y-4 ${
+            isActive ? 'max-h-[1000px] opacity-100 mb-6' : 'max-h-0 opacity-0 mb-0'
         }`}>
             {children}
         </div>
