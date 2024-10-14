@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronUp, ArrowLeft } from 'lucide-react';
-import { responseRender } from './formItemSettings/responseRender';
+import { responseRender } from './formResponses/responseRender';
 import useFormEditorStore from '@/store/formEditor';
-import { configRender } from './formItemSettings/configRender';
+import { configRender } from './formResponses/configRender';
 import { responseLabels, formField, formActivity } from './protocol';
 
 const FormField = ({ item, seqNumber, formActivity }: { 

@@ -38,6 +38,15 @@ openssl rand -hex 32
 ```
 Lastly, if you're deploying the application behind a reverse proxy, ensure that `AUTH_TRUST_HOST` is set to `true` in your environment variables.
 
+## 🔥 How to extend response types?
+- First, add the new response type in the FormResponseType enum (location: `./prisma/schema.prisma`) and make sure the perform a migration to update the database.
+- Then, go to `./src/components/formEditor`.
+- There you have to update the protocol.ts file first.
+- Next, go to the directory named formResponses.
+- Afterwards, update the config and response render files.
+- Finally, you have to create a new directory and use the new response type as name. That directory should contain at least config.tsx and response.tsx.
+
+If you'd like to make your new response types open-source (which we strongly encourage), please ensure they align closely with the platform's existing styling for consistency.
 
 ## 💡 Rational behind our tech stack
 We chose **Next.js** as our framework for its hybrid capabilities, allowing us to efficiently manage both client-side and server-side rendering. For authentication, we integrated **Auth.js** due to its strong compatibility with Next.js. For client state management we use **Zustand** because of its simplicity and minimal setup compared to Redux. For server state management, we rely on **TanStack**, which optimizes API handling with its smart caching and synchronization strategies. Our codebase is written in **TypeScript** to leverage type safety and improve code reliability. For styling, we use **Tailwind** to keep styles closely tied to the components they apply to, which enhances maintainability.
