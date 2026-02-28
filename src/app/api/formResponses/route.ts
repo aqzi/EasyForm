@@ -15,7 +15,7 @@ export const GET = auth(async function GET(req) {
         }
 
         if (!userId) {
-            return NextResponse.json({ error: 'Server error' }, { status: 404 });
+            return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
 
         const response = await prisma.formResponse.findUnique({

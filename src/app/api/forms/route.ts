@@ -130,7 +130,7 @@ export const PUT = auth(async function PUT(req) {
         }
 
         if (!userId) {
-            return NextResponse.json({ error: 'Server error' }, { status: 404 });
+            return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
 
         const formCreator = await prisma.formCreator.findUnique({
@@ -198,7 +198,7 @@ export const DELETE = auth(async function DELETE(req) {
         }
 
         if (!userId) {
-            return NextResponse.json({ error: 'Server error' }, { status: 404 });
+            return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
 
         const formCreator = await prisma.formCreator.findUnique({
