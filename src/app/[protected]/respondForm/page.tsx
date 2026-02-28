@@ -54,7 +54,6 @@ const RespondForm = () => {
     const handleSave = async () => {
         mutation.mutate({
             id: formId,
-            userId: session.data?.user?.id || null,
             formResponses: formFields.map((f, index) => ({
                 fieldResponse: f.response,
                 formFieldId: f.id,

@@ -1,15 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma';
 import { auth } from '@/auth';
 
 export const GET = auth(async function GET(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
+    const userId = req.auth.user?.id
+
     try {
         const formId = req.nextUrl.searchParams.get('id')
 
         if (!formId) {
             return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+        }
+
+        if (!userId) {
+            return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
 
         const response = await prisma.formResponse.findUnique({
@@ -21,12 +27,21 @@ export const GET = auth(async function GET(req) {
                         fieldResponse: true
                     }
                 },
-                form: true
+                form: {
+                    include: {
+                        formCreators: true
+                    }
+                }
             }
         });
 
         if (!response) {
             return NextResponse.json({ error: 'Response not found' }, { status: 404 });
+        }
+
+        const isOwner = response.form.formCreators.some((fc: any) => fc.userId === userId);
+        if (!isOwner) {
+            return NextResponse.json({ error: 'Not authorized to view this response' }, { status: 403 });
         }
 
         const data = {
@@ -46,8 +61,9 @@ export const GET = auth(async function GET(req) {
     }
 })
 
-export async function POST(req: NextRequest) {
-    const { id, userId, formResponses } = await req.json();
+export const POST = auth(async function POST(req) {
+    const { id, formResponses } = await req.json();
+    const userId = req.auth?.user?.id ?? null;
     
     try {
         if (!id) {
@@ -85,4 +101,4 @@ export async function POST(req: NextRequest) {
     } finally {
         await prisma.$disconnect();
     }
-}
+})
