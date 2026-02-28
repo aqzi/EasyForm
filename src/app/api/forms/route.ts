@@ -121,11 +121,24 @@ export const POST = auth(async function POST(req) {
 export const PUT = auth(async function PUT(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
+    const userId = req.auth.user?.id
     const { id, title, formFields } = await req.json();
     
     try {
         if (!id) {
             return NextResponse.json({ error: 'Form ID is required' }, { status: 400 });
+        }
+
+        if (!userId) {
+            return NextResponse.json({ error: 'Server error' }, { status: 404 });
+        }
+
+        const formCreator = await prisma.formCreator.findUnique({
+            where: { userId_formId: { userId, formId: id } }
+        });
+
+        if (!formCreator) {
+            return NextResponse.json({ error: 'Not authorized to edit this form' }, { status: 403 });
         }
 
         const updatedForm = await prisma.form.update({
@@ -176,11 +189,24 @@ export const PUT = auth(async function PUT(req) {
 export const DELETE = auth(async function DELETE(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
+    const userId = req.auth.user?.id
     const formId = req.nextUrl.searchParams.get('id')
 
     try {
         if (!formId) {
             return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+        }
+
+        if (!userId) {
+            return NextResponse.json({ error: 'Server error' }, { status: 404 });
+        }
+
+        const formCreator = await prisma.formCreator.findUnique({
+            where: { userId_formId: { userId, formId } }
+        });
+
+        if (!formCreator) {
+            return NextResponse.json({ error: 'Not authorized to delete this form' }, { status: 403 });
         }
 
         await prisma.form.delete({
